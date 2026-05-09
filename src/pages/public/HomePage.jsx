@@ -104,7 +104,7 @@ export const HomePage = () => {
                     <div className="w-32 h-32 md:w-40 md:h-40 mx-auto bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-hover)] rounded-full mb-6 flex items-center justify-center shadow-lg">
                       <span className="text-6xl md:text-7xl">👩‍🏫</span>
                     </div>
-                    <p className="text-lg font-medium text-[var(--color-text-primary)]">Nicole Anderson</p>
+                    <p className="text-lg font-medium text-[var(--color-text-primary)]">Nicole Shanté</p>
                     <p className="text-sm text-[var(--color-text-muted)]">Your English Tutor</p>
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export const HomePage = () => {
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-accent-hover)] rounded-full mb-6 flex items-center justify-center shadow-lg">
                     <span className="text-5xl">👩‍🏫</span>
                   </div>
-                  <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-1">Nicole Anderson</h3>
+                  <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-1">Nicole Shanté</h3>
                   <p className="text-sm text-[var(--color-text-muted)] mb-4">TESOL Certified English Teacher</p>
                   <div className="flex items-center justify-center gap-1">
                     {[...Array(5)].map((_, i) => (
@@ -274,7 +274,7 @@ export const HomePage = () => {
             {t('cta_subtitle')}
           </p>
           <Link to="/auth">
-            <Button size="xl" className="bg-white text-[var(--color-text-primary)] hover:bg-white/90 hover:text-[var(--color-text-primary)] gap-2">
+            <Button size="xl" className=" text-(--color-text-primary) hover:bg-white/90 hover:text-(--color-text-primary) gap-2">
               {t('cta_button')}
               <ArrowRight className="w-5 h-5" />
             </Button>
@@ -293,7 +293,7 @@ export const HomePage = () => {
               {t('contact_subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="https://wa.me/15551234567" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/34614232170" target="_blank" rel="noopener noreferrer">
                 <Button variant="secondary" size="lg" className="w-full sm:w-auto gap-2">
                   <MessageCircle className="w-5 h-5" />
                   {t('contact_whatsapp')}
