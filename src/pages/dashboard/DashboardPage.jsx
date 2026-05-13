@@ -5,7 +5,7 @@ import { Calendar, Video, Clock, X, RefreshCw, LogOut, User } from 'lucide-react
 import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
 import { getBookings, updateBooking } from '../../lib/supabase';
 
@@ -14,12 +14,6 @@ const statusColors = {
   confirmed: 'success',
   completed: 'default',
   cancelled: 'error',
-};
-
-const paymentStatusColors = {
-  pending: 'warning',
-  paid: 'success',
-  refunded: 'error',
 };
 
 export const DashboardPage = () => {
@@ -34,8 +28,8 @@ export const DashboardPage = () => {
       if (user) {
         const { data } = await getBookings(user.id);
         setBookings(data || []);
-        setLoading(false);
       }
+      setLoading(false);
     };
     fetchBookings();
   }, [user]);
@@ -58,6 +52,8 @@ export const DashboardPage = () => {
           prev.map((b) => (b.id === bookingId ? { ...b, status: 'cancelled' } : b))
         );
       }
+    } catch (err) {
+      console.error('Cancel booking error:', err);
     } finally {
       setActionLoading(null);
     }
@@ -97,7 +93,6 @@ export const DashboardPage = () => {
 
         <div className="grid lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 space-y-8">
-            {/* Upcoming Lessons */}
             <section>
               <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-4">{t('dashboard_upcoming')}</h2>
               {loading ? (
@@ -158,11 +153,7 @@ export const DashboardPage = () => {
                                 </Button>
                               </a>
                             )}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleReschedule(booking)}
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => handleReschedule(booking)}>
                               <RefreshCw className="w-4 h-4" />
                               {t('dashboard_reschedule')}
                             </Button>
@@ -184,7 +175,6 @@ export const DashboardPage = () => {
               )}
             </section>
 
-            {/* Past Lessons */}
             <section>
               <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-4">{t('dashboard_past')}</h2>
               {loading ? (
@@ -208,14 +198,9 @@ export const DashboardPage = () => {
                       <CardContent>
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           <div>
-                            <div className="flex items-center gap-3 mb-1">
-                              <Badge variant={statusColors[booking.status]}>
-                                {getStatusLabel(booking.status)}
-                              </Badge>
-                              <Badge variant={paymentStatusColors[booking.payment_status]}>
-                                {booking.payment_status}
-                              </Badge>
-                            </div>
+                            <Badge variant={statusColors[booking.status]}>
+                              {getStatusLabel(booking.status)}
+                            </Badge>
                             <h3 className="font-medium text-[var(--color-text-primary)]">
                               {booking.package?.name || 'English Lesson'}
                             </h3>
@@ -238,7 +223,6 @@ export const DashboardPage = () => {
             </section>
           </div>
 
-          {/* Profile Sidebar */}
           <div className="lg:col-span-1">
             <Card className="sticky top-24">
               <CardContent>
@@ -265,11 +249,7 @@ export const DashboardPage = () => {
                     </span>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  className="w-full mt-6"
-                  onClick={signOut}
-                >
+                <Button variant="ghost" className="w-full mt-6" onClick={signOut}>
                   <LogOut className="w-4 h-4" />
                   {t('nav_signOut')}
                 </Button>

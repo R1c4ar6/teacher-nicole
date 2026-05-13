@@ -232,19 +232,21 @@ RETURNS TABLE (
   day_of_week INTEGER
 ) AS $$
 DECLARE
-  current_date DATE;
+  current_day DATE;
 BEGIN
-  current_date := start_date;
-  WHILE current_date <= end_date LOOP
+  current_day := start_date;
+
+  WHILE current_day <= end_date LOOP
     FOR slot_time, day_of_week IN
       SELECT a.start_time, a.day_of_week
       FROM availability a
-      WHERE a.day_of_week = EXTRACT(DOW FROM current_date)
+      WHERE a.day_of_week = EXTRACT(DOW FROM current_day)
     LOOP
-      slot_date := current_date;
+      slot_date := current_day;
       RETURN NEXT;
     END LOOP;
-    current_date := current_date + 1;
+
+    current_day := current_day + 1;
   END LOOP;
 END;
 $$ LANGUAGE plpgsql;

@@ -1,28 +1,32 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, BookOpen } from 'lucide-react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, BookOpen, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card, CardContent } from '../../components/ui/Card';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
 
 export const LoginPage = () => {
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(searchParams.get('error') || '');
   const [isLoading, setIsLoading] = useState(false);
   const { signInWithGoogle, signInWithEmail } = useAuth();
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
     try {
       setError('');
+      setIsLoading(true);
       await signInWithGoogle();
     } catch (err) {
       setError(err.message || 'Failed to sign in with Google');
+      setIsLoading(false);
     }
   };
 
@@ -56,9 +60,17 @@ export const LoginPage = () => {
 
         <Card>
           <CardContent className="space-y-6">
+            {error && (
+              <div className="flex items-center gap-3 p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] hover:border-[var(--color-text-muted)] transition-all active:scale-[0.98]"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] hover:border-[var(--color-text-muted)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -79,12 +91,6 @@ export const LoginPage = () => {
             </div>
 
             <form onSubmit={handleEmailLogin} className="space-y-4">
-              {error && (
-                <div className="p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
-                  {error}
-                </div>
-              )}
-              
               <Input
                 type="email"
                 label="Email"
@@ -114,10 +120,7 @@ export const LoginPage = () => {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-accent)] focus:ring-[var(--color-accent)]"
-                  />
+                  <input type="checkbox" className="w-4 h-4 rounded border-[var(--color-border)]" />
                   <span className="text-[var(--color-text-secondary)]">{t('login_remember')}</span>
                 </label>
                 <Link to="/auth/forgot-password" className="text-[var(--color-accent)] hover:underline">
@@ -154,22 +157,33 @@ export const RegisterPage = () => {
   const { signInWithGoogle, signUpWithEmail } = useAuth();
   const navigate = useNavigate();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (e) => {
+    e.preventDefault();
     try {
       setError('');
+      setIsLoading(true);
       await signInWithGoogle();
     } catch (err) {
-      setError(err.message || 'Failed to sign in with Google');
+      setError(err.message || 'Failed to sign up with Google');
+      setIsLoading(false);
     }
   };
 
   const handleEmailRegister = async (e) => {
     e.preventDefault();
+    
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+    
     try {
       setError('');
       setIsLoading(true);
-      await signUpWithEmail(email, password, fullName);
-      navigate('/dashboard');
+      const result = await signUpWithEmail(email, password, fullName);
+      if (result.user) {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message || 'Failed to create account');
     } finally {
@@ -193,9 +207,17 @@ export const RegisterPage = () => {
 
         <Card>
           <CardContent className="space-y-6">
+            {error && (
+              <div className="flex items-center gap-3 p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] hover:border-[var(--color-text-muted)] transition-all active:scale-[0.98]"
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -216,12 +238,6 @@ export const RegisterPage = () => {
             </div>
 
             <form onSubmit={handleEmailRegister} className="space-y-4">
-              {error && (
-                <div className="p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
-                  {error}
-                </div>
-              )}
-
               <Input
                 label={t('register_fullName')}
                 type="text"

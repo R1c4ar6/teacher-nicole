@@ -82,7 +82,7 @@ export const HomePage = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/auth">
+                <Link to="/auth/login">
                   <Button size="lg" className="w-full sm:w-auto gap-2">
                     {t('hero_bookTrial')}
                     <ArrowRight className="w-5 h-5" />
@@ -273,7 +273,7 @@ export const HomePage = () => {
           <p className="text-lg text-white/70 max-w-xl mx-auto mb-10">
             {t('cta_subtitle')}
           </p>
-          <Link to="/auth">
+          <Link to="/auth/login">
             <Button size="xl" className=" text-(--color-text-primary) hover:bg-white/90 hover:text-(--color-text-primary) gap-2">
               {t('cta_button')}
               <ArrowRight className="w-5 h-5" />

@@ -18,7 +18,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../lib/auth';
 import { getBookings, getPackages, getApprovedTestimonials, updateBooking, supabase } from '../../lib/supabase';
 import { format, addDays, startOfWeek, addWeeks, isSameDay, parseISO } from 'date-fns';
 

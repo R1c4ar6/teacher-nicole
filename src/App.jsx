@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './lib/auth';
 import { LanguageProvider } from './context/LanguageContext';
 import { PageWrapper } from './components/layout/PageWrapper';
 import { HomePage } from './pages/public/HomePage';
 import { PricingPage } from './pages/public/PricingPage';
 import { LoginPage, RegisterPage } from './pages/auth/AuthPages';
+import { AuthCallbackPage } from './pages/auth/AuthCallback';
 import { BookingPage } from './pages/booking/BookingPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import {
@@ -21,12 +22,15 @@ import './styles/index.css';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, initialized } = AuthProvider ? useAuth() : { user: null, loading: false, initialized: true };
 
-  if (loading) {
+  if (!initialized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-pulse text-text-muted">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[var(--color-text-secondary)]">Loading...</p>
+        </div>
       </div>
     );
   }
@@ -38,26 +42,15 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-const AuthCallback = () => {
-  const { user } = useAuth();
-  
-  if (user) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return <Navigate to="/auth/login" replace />;
-};
-
 const AppRoutes = () => {
-  const { user } = useAuth();
-
   return (
     <Routes>
       <Route element={<PageWrapper />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/auth/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
-        <Route path="/auth/register" element={user ? <Navigate to="/dashboard" /> : <RegisterPage />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/book" element={<BookingPage />} />
         <Route
           path="/dashboard"
@@ -69,14 +62,7 @@ const AppRoutes = () => {
         />
       </Route>
 
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminDashboardPage />
-          </ProtectedRoute>
-        }
-      >
+      <Route path="/admin" element={<AdminDashboardPage />}>
         <Route path="bookings" element={<AdminBookingsPage />} />
         <Route path="availability" element={<AdminAvailabilityPage />} />
         <Route path="packages" element={<AdminPackagesPage />} />

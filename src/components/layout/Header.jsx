@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, BookOpen, User, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
 
 export const Header = () => {
@@ -39,7 +39,6 @@ export const Header = () => {
     <header className="sticky top-0 z-50 bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border)]">
       <nav className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-9 h-9 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
@@ -49,7 +48,6 @@ export const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
@@ -69,7 +67,6 @@ export const Header = () => {
             ))}
           </div>
 
-          {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
             
@@ -125,31 +122,25 @@ export const Header = () => {
               </div>
             ) : (
               <>
-                <Link to="/auth">
+                <Link to="/auth/login">
                   <Button variant="ghost" size="sm">{t('nav_signIn')}</Button>
                 </Link>
-                <Link to="/auth">
+                <Link to="/auth/register">
                   <Button size="sm">{t('nav_bookLesson')}</Button>
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
           <button
             className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-[var(--color-border)] animate-fade-in">
             <div className="flex flex-col gap-1">
@@ -196,10 +187,10 @@ export const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Link to="/auth">
+                    <Link to="/auth/login">
                       <Button variant="secondary" className="w-full">{t('nav_signIn')}</Button>
                     </Link>
-                    <Link to="/auth">
+                    <Link to="/auth/register">
                       <Button className="w-full">{t('nav_bookLesson')}</Button>
                     </Link>
                   </>

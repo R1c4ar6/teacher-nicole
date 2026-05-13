@@ -4,8 +4,7 @@ import { format, addDays, startOfWeek, addWeeks, isSameDay, parseISO } from 'dat
 import { ChevronLeft, ChevronRight, Clock, Globe, Check } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
 import { getPackages, getBookings, createBooking } from '../../lib/supabase';
 
@@ -23,27 +22,67 @@ const formatPrice = (cents, currency = 'USD') => {
   }).format(cents / 100);
 };
 
+const defaultPackages = [
+  {
+    id: 'trial',
+    name: 'Trial Lesson',
+    description: 'Perfect for getting started',
+    price_cents: 1500,
+    currency: 'USD',
+    duration_minutes: 30,
+    features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
+    is_active: true,
+    sort_order: 1,
+  },
+  {
+    id: 'weekly',
+    name: 'Weekly Sessions',
+    description: 'Consistent progress every week',
+    price_cents: 5500,
+    currency: 'USD',
+    duration_minutes: 60,
+    features: ['4 sessions per month', '60-minute lessons', 'Homework & feedback', 'Progress tracking', 'Email support'],
+    is_active: true,
+    sort_order: 2,
+  },
+  {
+    id: 'monthly',
+    name: 'Intensive Package',
+    description: 'Maximum growth in shortest time',
+    price_cents: 9000,
+    currency: 'USD',
+    duration_minutes: 60,
+    features: ['8 sessions per month', 'Priority scheduling', 'Custom study materials', 'WhatsApp support', 'Monthly progress report'],
+    is_active: true,
+    sort_order: 3,
+  },
+];
+
 export const BookingPage = () => {
   const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [packages, setPackages] = useState([]);
-  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [packages, setPackages] = useState(defaultPackages);
+  const [selectedPackage, setSelectedPackage] = useState(defaultPackages[0]);
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
   const [bookedSlots, setBookedSlots] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
     const fetchPackages = async () => {
-      const { data } = await getPackages();
-      if (data && data.length > 0) {
-        setPackages(data);
-        setSelectedPackage(data[0]);
+      try {
+        const { data } = await getPackages();
+        if (data && data.length > 0) {
+          setPackages(data);
+          setSelectedPackage(data[0]);
+        }
+      } catch (err) {
+        console.error('Error fetching packages:', err);
       }
       setLoading(false);
     };
@@ -54,16 +93,21 @@ export const BookingPage = () => {
     if (user) {
       fetchBookedSlots();
     }
-  }, [user, currentWeekStart]);
+  }, [user]);
 
   const fetchBookedSlots = async () => {
-    const { data } = await getBookings(user.id);
-    if (data) {
-      setBookedSlots(data.map(b => ({
-        date: b.start_time,
-        time: format(parseISO(b.start_time), 'HH:mm'),
-        status: b.status
-      })));
+    if (!user) return;
+    try {
+      const { data } = await getBookings(user.id);
+      if (data) {
+        setBookedSlots(data.map(b => ({
+          date: b.start_time,
+          time: format(parseISO(b.start_time), 'HH:mm'),
+          status: b.status
+        })));
+      }
+    } catch (err) {
+      console.error('Error fetching bookings:', err);
     }
   };
 
@@ -111,7 +155,7 @@ export const BookingPage = () => {
       const endTime = new Date(startTime);
       endTime.setMinutes(endTime.getMinutes() + (selectedPackage.duration_minutes || 60));
 
-      const { error } = await createBooking({
+      const { data, error } = await createBooking({
         student_id: user.id,
         package_id: selectedPackage.id,
         start_time: startTime.toISOString(),
@@ -124,6 +168,7 @@ export const BookingPage = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('Booking error:', err);
+      alert('Failed to create booking. Please try again.');
     } finally {
       setIsBooking(false);
     }
@@ -284,7 +329,7 @@ export const BookingPage = () => {
                       <Clock className="w-4 h-4" />
                       Available Times for {format(selectedDate, 'EEEE, MMMM d')}
                     </h4>
-                    <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-5 gap-2">
+                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                       {TIME_SLOTS.map((time) => {
                         const available = isSlotAvailable(selectedDate, time);
                         const isSelected = selectedTime === time;
@@ -388,13 +433,12 @@ export const BookingPage = () => {
                       <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_payment')}</p>
                       <div className="space-y-3">
                         <label className="flex items-center gap-3 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] cursor-pointer hover:border-[var(--color-accent)] transition-colors">
-                          <input type="radio" name="payment" value="paypal" className="accent-[var(--color-accent)]" defaultChecked />
+                          <input type="radio" name="payment" value="paypal" defaultChecked className="accent-[var(--color-accent)]" />
                           <span className="text-[var(--color-text-primary)]">{t('booking_paypal')}</span>
                         </label>
                         <label className="flex items-center gap-3 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] cursor-pointer hover:border-[var(--color-accent)] transition-colors">
                           <input type="radio" name="payment" value="bank" className="accent-[var(--color-accent)]" />
                           <span className="text-[var(--color-text-primary)]">{t('booking_bank')}</span>
-                          <Badge variant="default" className="ml-auto">{t('booking_manual')}</Badge>
                         </label>
                       </div>
                     </div>
