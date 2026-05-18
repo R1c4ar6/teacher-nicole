@@ -15,7 +15,7 @@ A warm, minimal tutoring platform where students can discover Teacher Nicole, tr
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
+- pnpm or yarn
 
 ### Installation
 
@@ -27,7 +27,7 @@ cd teacher-nicole
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -59,17 +59,17 @@ VITE_RESEND_API_KEY=your_resend_api_key
 
 Development mode:
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Production build:
 ```bash
-npm run build
+pnpm run build
 ```
 
 Preview production build:
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ## Project Structure
@@ -143,10 +143,10 @@ src/
 
 ## Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint (if configured)
+- `pnpm run dev` - Start development server
+- `pnpm run build` - Build for production
+- `pnpm run preview` - Preview production build
+- `pnpm run lint` - Run ESLint (if configured)
 
 ## Environment Variables
 

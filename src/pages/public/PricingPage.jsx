@@ -36,7 +36,7 @@ export const PricingPage = () => {
       id: 'trial',
       name: 'Trial Lesson',
       description: 'Perfect for getting started',
-      price_cents: 1500,
+      price_cents: 500,
       currency: 'USD',
       duration_minutes: 30,
       features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
