@@ -179,12 +179,7 @@ export const HomePage = () => {
               <div className="mt-8 space-y-3">
                 <h4 className="font-semibold text-[var(--color-text-primary)]">{t('about_qualifications')}</h4>
                 <ul className="space-y-2">
-                  {[
-                    "TESOL (Teaching English to Speakers of Other Languages)",
-                    "Bachelor's in English Literature",
-                    "8+ years online teaching experience",
-                    "Specialized in Conversational & Business English",
-                  ].map((item, i) => (
+                  {t('about_qualifications_array').map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-[var(--color-text-secondary)]">
                       <div className="w-5 h-5 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center flex-shrink-0">
                         <div className="w-2 h-2 bg-[var(--color-success)] rounded-full" />

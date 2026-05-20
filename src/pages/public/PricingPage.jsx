@@ -22,72 +22,82 @@ export const PricingPage = () => {
 
   useEffect(() => {
     const fetchPackages = async () => {
-      const { data } = await getPackages();
-      if (data && data.length > 0) {
-        setPackages(data);
+      try {
+        const { data } = await getPackages();
+        if (data && data.length > 0) {
+          setPackages(data);
+        }
+      } catch (err) {
+        console.error('Error fetching packages:', err);
       }
       setLoading(false);
     };
     fetchPackages();
   }, []);
 
-  const displayPackages = packages.length > 0 ? packages : [
-    {
-      id: 'trial',
-      name: 'Trial Lesson',
-      description: 'Perfect for getting started',
-      price_cents: 500,
-      currency: 'USD',
-      duration_minutes: 30,
-      features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
-      is_active: true,
-      sort_order: 1,
-    },
-    {
-      id: 'weekly',
-      name: 'Weekly Sessions',
-      description: 'Consistent progress every week',
-      price_cents: 5500,
-      currency: 'USD',
-      duration_minutes: 60,
-      features: ['4 sessions per month', '60-minute lessons', 'Homework & feedback', 'Progress tracking', 'Email support'],
-      is_active: true,
-      sort_order: 2,
-    },
-    {
-      id: 'monthly',
-      name: 'Intensive Package',
-      description: 'Maximum growth in shortest time',
-      price_cents: 9000,
-      currency: 'USD',
-      duration_minutes: 60,
-      features: ['8 sessions per month', 'Priority scheduling', 'Custom study materials', 'WhatsApp support', 'Monthly progress report'],
-      is_active: true,
-      sort_order: 3,
-    },
-  ];
+  const getPackageData = (index) => {
+    if (packages.length > 0) {
+      return packages[index];
+    }
+    
+    const defaultPackages = [
+      {
+        id: 'trial',
+        name: t('package_trial_name'),
+        description: t('package_trial_desc'),
+        price_cents: 1500,
+        currency: 'USD',
+        duration_minutes: 30,
+        features: [
+          '30-minute session',
+          'Level assessment',
+          'Personalized learning plan',
+          'No commitment required',
+        ],
+      },
+      {
+        id: 'weekly',
+        name: t('package_weekly_name'),
+        description: t('package_weekly_desc'),
+        price_cents: 5500,
+        currency: 'USD',
+        duration_minutes: 60,
+        features: [
+          '4 sessions per month',
+          '60-minute lessons',
+          'Homework & feedback',
+          'Progress tracking',
+          'Email support',
+        ],
+      },
+      {
+        id: 'intensive',
+        name: t('package_intensive_name'),
+        description: t('package_intensive_desc'),
+        price_cents: 9000,
+        currency: 'USD',
+        duration_minutes: 60,
+        features: [
+          '8 sessions per month',
+          'Priority scheduling',
+          'Custom study materials',
+          'WhatsApp support',
+          'Monthly progress report',
+        ],
+      },
+    ];
+    
+    return defaultPackages[index];
+  };
+
+  const displayPackages = packages.length > 0 ? packages : null;
 
   const faqs = [
-    {
-      question: 'What payment methods do you accept?',
-      answer: 'I accept PayPal and bank transfers. For bank transfers, please contact me to receive my banking details. Payment must be completed before the lesson.',
-    },
-    {
-      question: 'Can I reschedule a lesson?',
-      answer: "Yes! Lessons can be rescheduled with at least 24 hours notice. Just send me a message and we'll find a time that works for both of us.",
-    },
-    {
-      question: 'What if I need to cancel?',
-      answer: "Cancellations made at least 48 hours before the lesson will receive a full refund. Cancellations within 48 hours may be subject to a cancellation fee.",
-    },
-    {
-      question: 'How do online lessons work?',
-      answer: "Lessons are conducted via Google Meet. You'll receive a link before each session. All you need is a computer/tablet with a stable internet connection and a microphone.",
-    },
-    {
-      question: 'Can I switch between packages?',
-      answer: "Absolutely! You can upgrade, downgrade, or pause your package at any time. Just let me know before your next billing cycle.",
-    },
+    { question: t('faq_payment_q'), answer: t('faq_payment_a') },
+    { question: t('faq_reschedule_q'), answer: t('faq_reschedule_a') },
+    { question: t('faq_cancel_q'), answer: t('faq_cancel_a') },
+    { question: t('faq_online_q'), answer: t('faq_online_a') },
+    { question: t('faq_switch_q'), answer: t('faq_switch_a') },
   ];
 
   return (
@@ -110,55 +120,60 @@ export const PricingPage = () => {
       <section className="py-16 md:py-24 -mt-8">
         <div className="container-custom">
           <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
-            {displayPackages.map((pkg, index) => (
-              <Card
-                key={pkg.id}
-                variant={index === 1 ? 'accent' : 'default'}
-                className={`relative ${index === 1 ? 'md:-mt-4 md:mb-[-16px]' : ''}`}
-              >
-                {index === 1 && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge variant="accent">{t('pricing_mostPopular')}</Badge>
-                  </div>
-                )}
-                <CardContent>
-                  <div className="mb-6">
-                    <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-1">
-                      {pkg.name}
-                    </h3>
-                    <p className="text-sm text-[var(--color-text-muted)]">{pkg.description}</p>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <span className="text-4xl font-display text-[var(--color-text-primary)]">
-                      {formatPrice(pkg.price_cents, pkg.currency)}
-                    </span>
-                    <span className="text-[var(--color-text-muted)]"> / {pkg.duration_minutes}min</span>
-                  </div>
-                  
-                  <ul className="space-y-3 mb-8">
-                    {pkg.features?.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-[var(--color-text-secondary)]">
-                        <div className="w-5 h-5 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Check className="w-3 h-3 text-[var(--color-success)]" />
-                        </div>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Link to="/auth" className="block">
-                    <Button
-                      variant={index === 1 ? 'primary' : 'secondary'}
-                      className="w-full gap-2"
-                    >
-                      {t('pricing_getStarted')}
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+            {[0, 1, 2].map((index) => {
+              const pkg = displayPackages ? displayPackages[index] : getPackageData(index);
+              if (!pkg) return null;
+              
+              return (
+                <Card
+                  key={pkg.id || index}
+                  variant={index === 1 ? 'accent' : 'default'}
+                  className={`relative ${index === 1 ? 'md:-mt-4 md:mb-[-16px]' : ''}`}
+                >
+                  {index === 1 && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <Badge variant="accent">{t('pricing_mostPopular')}</Badge>
+                    </div>
+                  )}
+                  <CardContent>
+                    <div className="mb-6">
+                      <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-1">
+                        {pkg.name}
+                      </h3>
+                      <p className="text-sm text-[var(--color-text-muted)]">{pkg.description}</p>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <span className="text-4xl font-display text-[var(--color-text-primary)]">
+                        {formatPrice(pkg.price_cents, pkg.currency)}
+                      </span>
+                      <span className="text-[var(--color-text-muted)]"> / {pkg.duration_minutes}min</span>
+                    </div>
+                    
+                    <ul className="space-y-3 mb-8">
+                      {pkg.features?.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-3 text-sm text-[var(--color-text-secondary)]">
+                          <div className="w-5 h-5 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 text-[var(--color-success)]" />
+                          </div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <Link to="/auth/register" className="block">
+                      <Button
+                        variant={index === 1 ? 'primary' : 'secondary'}
+                        className="w-full gap-2"
+                      >
+                        {t('pricing_getStarted')}
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           <p className="text-center text-sm text-[var(--color-text-muted)] mt-10">

@@ -4,7 +4,7 @@ import { Footer } from './Footer';
 
 export const PageWrapper = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-background)' }}>
       <Header />
       <main className="flex-1">
         <Outlet />

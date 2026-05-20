@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const Footer = () => {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -17,23 +19,23 @@ export const Footer = () => {
               <span className="font-display text-xl text-white">Teacher Nicole</span>
             </Link>
             <p className="text-white/60 max-w-md leading-relaxed mb-6">
-              Making English learning accessible, enjoyable, and effective for students of all ages and levels.
+              {t('footer_tagline')}
             </p>
             <div className="flex items-center gap-2 text-sm text-white/40">
               <div className="w-2 h-2 bg-[var(--color-success)] rounded-full animate-pulse" />
-              <span>Currently accepting new students</span>
+              <span>{t('accepting_students')}</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Quick Links</h4>
+            <h4 className="font-semibold text-white mb-4">{t('footer_quickLinks')}</h4>
             <ul className="space-y-3">
               {[
-                { to: '/', label: 'Home' },
-                { to: '/pricing', label: 'Pricing' },
-                { to: '/#about', label: 'About' },
-                { to: '/auth', label: 'Book a Lesson' },
+                { to: '/', label: t('nav_home') },
+                { to: '/pricing', label: t('nav_pricing') },
+                { to: '/#about', label: t('nav_about') },
+                { to: '/auth/register', label: t('nav_bookLesson') },
               ].map((link) => (
                 <li key={link.to}>
                   <Link
@@ -49,7 +51,7 @@ export const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-semibold text-white mb-4">Contact</h4>
+            <h4 className="font-semibold text-white mb-4">{t('footer_contact')}</h4>
             <ul className="space-y-3">
               <li>
                 <a
@@ -57,7 +59,7 @@ export const Footer = () => {
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Mail className="w-4 h-4" />
-                  hello@teachernicole.com
+                  {t('footer_email')}
                 </a>
               </li>
               <li>
@@ -68,12 +70,12 @@ export const Footer = () => {
                   className="flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  +1 (555) 123-4567
+                  {t('footer_phone')}
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-white/60">
                 <MapPin className="w-4 h-4" />
-                Online Classes Worldwide
+                {t('footer_location')}
               </li>
             </ul>
           </div>
@@ -81,14 +83,14 @@ export const Footer = () => {
 
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-white/40">
-            &copy; {currentYear} Teacher Nicole. All rights reserved.
+            &copy; {currentYear} Teacher Nicole. {t('footer_copyright')}
           </p>
           <div className="flex gap-6 text-sm text-white/40">
             <Link to="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
+              {t('footer_privacy')}
             </Link>
             <Link to="/terms" className="hover:text-white transition-colors">
-              Terms of Service
+              {t('footer_terms')}
             </Link>
           </div>
         </div>

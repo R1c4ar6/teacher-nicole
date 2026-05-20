@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, BookOpen, User, ChevronDown, LogOut } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -12,6 +12,19 @@ export const Header = () => {
   const { user, profile, isAdmin, signOut } = useAuth();
   const { t } = useLanguage();
   const location = useLocation();
+
+  const scrollToSection = useCallback((sectionId) => {
+    if (location.pathname !== '/') {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -29,17 +42,26 @@ export const Header = () => {
   }, [isUserMenuOpen]);
 
   const navLinks = [
-    { to: '/', label: t('nav_home') },
-    { to: '/pricing', label: t('nav_pricing') },
-    { to: '/#about', label: t('nav_about') },
-    { to: '/#contact', label: t('nav_contact') },
+    { to: '/', label: t('nav_home'), action: null },
+    { to: '/pricing', label: t('nav_pricing'), action: null },
+    { to: '#about', label: t('nav_about'), action: () => scrollToSection('about') },
+    { to: '#contact', label: t('nav_contact'), action: () => scrollToSection('contact') },
   ];
+
+  const handleNavClick = (link) => {
+    if (link.action) {
+      link.action();
+    } else {
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border)]">
       <nav className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <Link to="/" className="flex items-center gap-2 group">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="w-9 h-9 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
@@ -48,25 +70,41 @@ export const Header = () => {
             </span>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`
-                  px-4 py-2 text-sm font-medium rounded-[var(--radius-md)]
-                  transition-colors duration-200
-                  ${location.pathname === link.to
-                    ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
-                    : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]'
-                  }
-                `}
-              >
-                {link.label}
-              </Link>
+              link.action ? (
+                <button
+                  key={link.to}
+                  onClick={() => link.action()}
+                  className={`
+                    px-4 py-2 text-sm font-medium rounded-[var(--radius-md)]
+                    transition-colors duration-200
+                    text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]
+                  `}
+                >
+                  {link.label}
+                </button>
+              ) : (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`
+                    px-4 py-2 text-sm font-medium rounded-[var(--radius-md)]
+                    transition-colors duration-200
+                    ${location.pathname === link.to
+                      ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
+                      : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]'
+                    }
+                  `}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
 
+          {/* Desktop Auth */}
           <div className="hidden md:flex items-center gap-3">
             <LanguageSwitcher />
             
@@ -132,6 +170,7 @@ export const Header = () => {
             )}
           </div>
 
+          {/* Mobile Menu Toggle */}
           <button
             className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -141,24 +180,35 @@ export const Header = () => {
           </button>
         </div>
 
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-[var(--color-border)] animate-fade-in">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`
-                    px-4 py-3 text-base font-medium rounded-[var(--radius-md)]
-                    transition-colors
-                    ${location.pathname === link.to
-                      ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
-                      : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)]'
-                    }
-                  `}
-                >
-                  {link.label}
-                </Link>
+                link.action ? (
+                  <button
+                    key={link.to}
+                    onClick={() => link.action()}
+                    className="px-4 py-3 text-base font-medium rounded-[var(--radius-md)] text-left text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)] transition-colors"
+                  >
+                    {link.label}
+                  </button>
+                ) : (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={`
+                      px-4 py-3 text-base font-medium rounded-[var(--radius-md)]
+                      transition-colors
+                      ${location.pathname === link.to
+                        ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
+                        : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)]'
+                      }
+                    `}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </div>
             

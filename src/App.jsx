@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './lib/auth';
 import { LanguageProvider } from './context/LanguageContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { PageWrapper } from './components/layout/PageWrapper';
 import { HomePage } from './pages/public/HomePage';
 import { PricingPage } from './pages/public/PricingPage';
@@ -22,7 +23,7 @@ import './styles/index.css';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading, initialized } = AuthProvider ? useAuth() : { user: null, loading: false, initialized: true };
+  const { user, loading, initialized } = typeof AuthProvider !== 'undefined' ? useAuth() : { user: null, loading: false, initialized: true };
 
   if (!initialized) {
     return (
@@ -77,15 +78,17 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <LanguageProvider>
-            <AppRoutes />
-          </LanguageProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <LanguageProvider>
+              <AppRoutes />
+            </LanguageProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
