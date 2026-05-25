@@ -176,20 +176,20 @@ export const DashboardPage = () => {
             </section>
 
             <section>
-              <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-4">{t('dashboard_past')}</h2>
+              <h2 className="text-xl font-semibold text-(--color-text-primary) mb-4">{t('dashboard_past')}</h2>
               {loading ? (
                 <div className="space-y-4">
                   {[1, 2].map((i) => (
                     <Card key={i} className="animate-pulse">
                       <CardContent>
-                        <div className="h-20 bg-[var(--color-secondary)]/50 rounded-[var(--radius-md)]" />
+                        <div className="h-20 bg-secondary/50 rounded-md" />
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               ) : pastBookings.length === 0 ? (
                 <Card className="text-center py-8">
-                  <p className="text-[var(--color-text-muted)]">{t('dashboard_noPast')}</p>
+                  <p className="text-text-muted">{t('dashboard_noPast')}</p>
                 </Card>
               ) : (
                 <div className="space-y-4">
@@ -201,15 +201,15 @@ export const DashboardPage = () => {
                             <Badge variant={statusColors[booking.status]}>
                               {getStatusLabel(booking.status)}
                             </Badge>
-                            <h3 className="font-medium text-[var(--color-text-primary)]">
+                            <h3 className="font-medium text-(--color-text-primary)">
                               {booking.package?.name || 'English Lesson'}
                             </h3>
-                            <p className="text-sm text-[var(--color-text-secondary)]">
+                            <p className="text-sm text-text-secondary">
                               {format(parseISO(booking.start_time), 'MMMM d, yyyy')} at{' '}
                               {format(parseISO(booking.start_time), 'h:mm a')}
                             </p>
                           </div>
-                          <Link to="/book" className="flex-shrink-0">
+                          <Link to="/book" className="shrink-0">
                             <Button variant="ghost" size="sm">
                               {t('dashboard_bookAgain')}
                             </Button>
@@ -227,24 +227,24 @@ export const DashboardPage = () => {
             <Card className="sticky top-24">
               <CardContent>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-[var(--color-accent-soft)] rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-[var(--color-accent)]" />
+                  <div className="w-12 h-12 bg-accent-soft rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-accent" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-medium text-[var(--color-text-primary)] truncate">
+                    <p className="font-medium text-(--color-text-primary) truncate">
                       {profile?.full_name || 'Student'}
                     </p>
-                    <p className="text-sm text-[var(--color-text-muted)] truncate">{profile?.email}</p>
+                    <p className="text-sm text-text-muted truncate">{profile?.email}</p>
                   </div>
                 </div>
-                <div className="space-y-3 pt-4 border-t border-[var(--color-border)]">
+                <div className="space-y-3 pt-4 border-t border-border">
                   <div className="flex justify-between text-sm">
-                    <span className="text-[var(--color-text-muted)]">{t('dashboard_total')}</span>
-                    <span className="font-medium text-[var(--color-text-primary)]">{bookings.length}</span>
+                    <span className="text-text-muted">{t('dashboard_total')}</span>
+                    <span className="font-medium text-(--color-text-primary)">{bookings.length}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-[var(--color-text-muted)]">{t('dashboard_completed')}</span>
-                    <span className="font-medium text-[var(--color-success)]">
+                    <span className="text-text-muted">{t('dashboard_completed')}</span>
+                    <span className="font-medium text-success">
                       {bookings.filter((b) => b.status === 'completed').length}
                     </span>
                   </div>

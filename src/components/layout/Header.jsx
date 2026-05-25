@@ -57,15 +57,15 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--color-surface)]/95 backdrop-blur-md border-b border-[var(--color-border)]">
+    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-md border-b border-border">
       <nav className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setIsMobileMenuOpen(false)}>
-            <div className="w-9 h-9 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
+            <div className="w-9 h-9 bg-accent rounded-md flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display text-lg text-[var(--color-text-primary)] hidden sm:block">
+            <span className="font-display text-lg text-(--color-text-primary) hidden sm:block">
               Teacher Nicole
             </span>
           </Link>
@@ -78,9 +78,9 @@ export const Header = () => {
                   key={link.to}
                   onClick={() => link.action()}
                   className={`
-                    px-4 py-2 text-sm font-medium rounded-[var(--radius-md)]
+                    px-4 py-2 text-sm font-medium rounded-md
                     transition-colors duration-200
-                    text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]
+                    text-text-secondary hover:text-(--color-text-primary) hover:bg-secondary
                   `}
                 >
                   {link.label}
@@ -90,11 +90,11 @@ export const Header = () => {
                   key={link.to}
                   to={link.to}
                   className={`
-                    px-4 py-2 text-sm font-medium rounded-[var(--radius-md)]
+                    px-4 py-2 text-sm font-medium rounded-md
                     transition-colors duration-200
                     ${location.pathname === link.to
-                      ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
-                      : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-secondary)]'
+                      ? 'text-accent bg-accent-soft'
+                      : 'text-text-secondary hover:text-(--color-text-primary) hover:bg-secondary'
                     }
                   `}
                 >
@@ -112,10 +112,10 @@ export const Header = () => {
               <div className="relative user-menu">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-text-secondary hover:text-(--color-text-primary) bg-surface border border-border rounded-md transition-colors"
                 >
-                  <div className="w-8 h-8 bg-[var(--color-accent-soft)] rounded-full flex items-center justify-center">
-                    <span className="text-sm font-medium text-[var(--color-accent)]">
+                  <div className="w-8 h-8 bg-accent-soft rounded-full flex items-center justify-center">
+                    <span className="text-sm font-medium text-accent">
                       {profile?.full_name?.charAt(0) || 'U'}
                     </span>
                   </div>

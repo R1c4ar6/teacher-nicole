@@ -49,20 +49,20 @@ export const LoginPage = () => {
       <div className="w-full max-w-md animate-fade-in-up">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
+            <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display text-xl text-[var(--color-text-primary)]">Teacher Nicole</span>
+            <span className="font-display text-xl text-(--color-text-primary)">Teacher Nicole</span>
           </Link>
-          <h1 className="text-3xl font-display text-[var(--color-text-primary)] mb-2">{t('login_title')}</h1>
-          <p className="text-[var(--color-text-secondary)]">{t('login_subtitle')}</p>
+          <h1 className="text-3xl font-display text-(--color-text-primary) mb-2">{t('login_title')}</h1>
+          <p className="text-text-secondary">{t('login_subtitle')}</p>
         </div>
 
         <Card>
           <CardContent className="space-y-6">
             {error && (
-              <div className="flex items-center gap-3 p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <div className="flex items-center gap-3 p-4 bg-error/10 border border-error/20 rounded-md text-sm text-error">
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -70,7 +70,7 @@ export const LoginPage = () => {
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] hover:border-[var(--color-text-muted)] transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-surface border border-border rounded-md text-(--color-text-primary) font-medium hover:bg-secondary hover:border-text-muted transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -83,10 +83,10 @@ export const LoginPage = () => {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[var(--color-border)]" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center">
-                <span className="px-4 bg-[var(--color-surface)] text-sm text-[var(--color-text-muted)]">{t('login_or')}</span>
+                <span className="px-4 bg-surface text-sm text-text-muted">{t('login_or')}</span>
               </div>
             </div>
 
@@ -99,7 +99,7 @@ export const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              
+
               <div className="relative">
                 <Input
                   type={showPassword ? 'text' : 'password'}
@@ -112,7 +112,7 @@ export const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-9 text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                  className="absolute right-3 top-9 text-text-muted hover:text-text-secondary"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -120,10 +120,10 @@ export const LoginPage = () => {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-[var(--color-border)]" />
-                  <span className="text-[var(--color-text-secondary)]">{t('login_remember')}</span>
+                  <input type="checkbox" className="w-4 h-4 rounded border-border" />
+                  <span className="text-text-secondary">{t('login_remember')}</span>
                 </label>
-                <Link to="/auth/forgot-password" className="text-[var(--color-accent)] hover:underline">
+                <Link to="/auth/forgot-password" className="text-accent hover:underline">
                   {t('login_forgot')}
                 </Link>
               </div>
@@ -133,9 +133,9 @@ export const LoginPage = () => {
               </Button>
             </form>
 
-            <p className="text-center text-sm text-[var(--color-text-secondary)]">
+            <p className="text-center text-sm text-text-secondary">
               {t('login_noAccount')}
-              <Link to="/auth/register" className="text-[var(--color-accent)] hover:underline font-medium">
+              <Link to="/auth/register" className="text-accent hover:underline font-medium">
                 {t('login_signup')}
               </Link>
             </p>
@@ -171,18 +171,20 @@ export const RegisterPage = () => {
 
   const handleEmailRegister = async (e) => {
     e.preventDefault();
-    
+
     if (password.length < 8) {
       setError('Password must be at least 8 characters');
       return;
     }
-    
+
     try {
       setError('');
       setIsLoading(true);
       const result = await signUpWithEmail(email, password, fullName);
-      if (result.user) {
+      if (result.session) {
         navigate('/dashboard');
+      } else {
+        navigate('/auth/login?message=Check your email to confirm your account');
       }
     } catch (err) {
       setError(err.message || 'Failed to create account');
@@ -196,20 +198,20 @@ export const RegisterPage = () => {
       <div className="w-full max-w-md animate-fade-in-up">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
+            <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center">
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display text-xl text-[var(--color-text-primary)]">Teacher Nicole</span>
+            <span className="font-display text-xl text-(--color-text-primary)">Teacher Nicole</span>
           </Link>
-          <h1 className="text-3xl font-display text-[var(--color-text-primary)] mb-2">{t('register_title')}</h1>
-          <p className="text-[var(--color-text-secondary)]">{t('register_subtitle')}</p>
+          <h1 className="text-3xl font-display text-(--color-text-primary) mb-2">{t('register_title')}</h1>
+          <p className="text-text-secondary">{t('register_subtitle')}</p>
         </div>
 
         <Card>
           <CardContent className="space-y-6">
             {error && (
-              <div className="flex items-center gap-3 p-4 bg-[var(--color-error)]/10 border border-[var(--color-error)]/20 rounded-[var(--radius-md)] text-sm text-[var(--color-error)]">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <div className="flex items-center gap-3 p-4 bg-error/10 border border-error/20 rounded-md text-sm text-error">
+                <AlertCircle className="w-5 h-5 shrink-0" />
                 <span>{error}</span>
               </div>
             )}

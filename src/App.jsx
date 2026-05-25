@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './lib/auth';
+import { AuthProvider, useAuth } from './lib/auth';
 import { LanguageProvider } from './context/LanguageContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { PageWrapper } from './components/layout/PageWrapper';
@@ -23,14 +23,14 @@ import './styles/index.css';
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading, initialized } = typeof AuthProvider !== 'undefined' ? useAuth() : { user: null, loading: false, initialized: true };
+  const { user, loading, initialized } = useAuth();
 
-  if (!initialized) {
+  if (!initialized || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[var(--color-text-secondary)]">Loading...</p>
+          <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-text-secondary">Loading...</p>
         </div>
       </div>
     );

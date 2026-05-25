@@ -278,13 +278,13 @@ export const HomePage = () => {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-[var(--color-surface)]">
+      <section id="contact" className="py-20 bg-surface">
         <div className="container-custom">
           <div className="max-w-xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-display text-[var(--color-text-primary)] mb-4">
+            <h2 className="text-2xl md:text-3xl font-display text-(--color-text-primary) mb-4">
               {t('contact_title')}
             </h2>
-            <p className="text-[var(--color-text-secondary)] mb-8">
+            <p className="text-text-secondary mb-8">
               {t('contact_subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

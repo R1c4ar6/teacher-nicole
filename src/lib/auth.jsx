@@ -57,12 +57,13 @@ export const AuthProvider = ({ children }) => {
 
     initAuth();
 
-    supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
 
       if (session?.user) {
         setUser(session.user);
-
         fetchProfile(session.user.id);
       } else {
         setUser(null);
@@ -70,10 +71,10 @@ export const AuthProvider = ({ children }) => {
       }
     });
 
-    /* return () => {
+    return () => {
       mounted = false;
       subscription.unsubscribe();
-    }; */
+    };
   }, []);
 
   const signInWithGoogle = async () => {

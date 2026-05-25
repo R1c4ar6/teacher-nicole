@@ -180,8 +180,8 @@ export const BookingPage = () => {
     <div className="min-h-[calc(100vh-80px)] py-12 md:py-16">
       <div className="container-custom max-w-4xl">
         <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-display text-[var(--color-text-primary)] mb-2">{t('booking_title')}</h1>
-          <p className="text-[var(--color-text-secondary)]">
+          <h1 className="text-3xl md:text-4xl font-display text-(--color-text-primary) mb-2">{t('booking_title')}</h1>
+          <p className="text-text-secondary">
             {step === 1 && t('booking_step1')}
             {step === 2 && t('booking_step2')}
             {step === 3 && t('booking_step3')}
@@ -194,8 +194,8 @@ export const BookingPage = () => {
               <div
                 className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
                   s <= step
-                    ? 'bg-[var(--color-accent)] text-white'
-                    : 'bg-[var(--color-secondary)] text-[var(--color-text-muted)]'
+                    ? 'bg-accent text-white'
+                    : 'bg-secondary text-text-muted'
                 }`}
               >
                 {s < step ? <Check className="w-5 h-5" /> : s}
