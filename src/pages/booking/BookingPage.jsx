@@ -201,8 +201,8 @@ export const BookingPage = () => {
                 {s < step ? <Check className="w-5 h-5" /> : s}
               </div>
               {s < 3 && (
-                <div className={`flex-1 h-1 max-w-[40px] md:max-w-[80px] rounded-full ${
-                  s < step ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-secondary)]'
+                <div className={`flex-1 h-1 max-w-10 md:max-w-20 rounded-full ${
+                  s < step ? 'bg-accent' : 'bg-secondary'
                 }`} />
               )}
             </div>
@@ -216,21 +216,21 @@ export const BookingPage = () => {
                 key={pkg.id}
                 variant={selectedPackage?.id === pkg.id ? 'accent' : 'hover'}
                 onClick={() => setSelectedPackage(pkg)}
-                className={`cursor-pointer ${selectedPackage?.id === pkg.id ? 'ring-2 ring-[var(--color-accent)]' : ''}`}
+                className={`cursor-pointer ${selectedPackage?.id === pkg.id ? 'ring-2 ring-accent' : ''}`}
               >
                 <CardContent>
-                  <h3 className="text-lg font-display text-[var(--color-text-primary)] mb-1">{pkg.name}</h3>
-                  <p className="text-sm text-[var(--color-text-muted)] mb-4">{pkg.description}</p>
+                  <h3 className="text-lg font-display text-(--color-text-primary) mb-1">{pkg.name}</h3>
+                  <p className="text-sm text-text-muted mb-4">{pkg.description}</p>
                   <div className="mb-4">
-                    <span className="text-2xl font-display text-[var(--color-text-primary)]">
+                    <span className="text-2xl font-display text-(--color-text-primary)">
                       {formatPrice(pkg.price_cents, pkg.currency)}
                     </span>
-                    <span className="text-[var(--color-text-muted)]"> / {pkg.duration_minutes}min</span>
+                    <span className="text-text-muted"> / {pkg.duration_minutes}min</span>
                   </div>
                   <ul className="space-y-2">
                     {pkg.features?.map((feature, i) => (
-                      <li key={i} className="text-sm text-[var(--color-text-secondary)] flex items-center gap-2">
-                        <div className="w-2 h-2 bg-[var(--color-accent)] rounded-full flex-shrink-0" />
+                      <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
+                        <div className="w-2 h-2 bg-accent rounded-full shrink-0" />
                         {feature}
                       </li>
                     ))}
@@ -247,13 +247,13 @@ export const BookingPage = () => {
               <Card>
                 <CardContent>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">{t('booking_dateTime')}</h3>
-                    <div className="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
+                    <h3 className="text-lg font-semibold text-(--color-text-primary)">{t('booking_dateTime')}</h3>
+                    <div className="flex items-center gap-2 text-sm text-text-muted">
                       <Globe className="w-4 h-4" />
                       <select
                         value={timezone}
                         onChange={(e) => setTimezone(e.target.value)}
-                        className="bg-transparent border-none focus:outline-none cursor-pointer text-[var(--color-text-secondary)]"
+                        className="bg-transparent border-none focus:outline-none cursor-pointer text-text-secondary"
                       >
                         <option value="UTC">UTC</option>
                         <option value="America/New_York">Eastern Time</option>
@@ -267,24 +267,24 @@ export const BookingPage = () => {
                   <div className="flex items-center justify-between mb-4">
                     <button
                       onClick={() => setCurrentWeekStart(addWeeks(currentWeekStart, -1))}
-                      className="p-2 hover:bg-[var(--color-secondary)] rounded-[var(--radius-md)] transition-colors"
+                      className="p-2 hover:bg-secondary rounded-md transition-colors"
                     >
-                      <ChevronLeft className="w-5 h-5 text-[var(--color-text-secondary)]" />
+                      <ChevronLeft className="w-5 h-5 text-text-secondary" />
                     </button>
-                    <span className="font-medium text-[var(--color-text-primary)]">
+                    <span className="font-medium text-(--color-text-primary)">
                       {format(currentWeekStart, 'MMMM yyyy')}
                     </span>
                     <button
                       onClick={() => setCurrentWeekStart(addWeeks(currentWeekStart, 1))}
-                      className="p-2 hover:bg-[var(--color-secondary)] rounded-[var(--radius-md)] transition-colors"
+                      className="p-2 hover:bg-secondary rounded-md transition-colors"
                     >
-                      <ChevronRight className="w-5 h-5 text-[var(--color-text-secondary)]" />
+                      <ChevronRight className="w-5 h-5 text-text-secondary" />
                     </button>
                   </div>
 
                   <div className="grid grid-cols-7 gap-1 md:gap-2 mb-4">
                     {DAYS_OF_WEEK.map((day) => (
-                      <div key={day} className="text-center text-xs md:text-sm font-medium text-[var(--color-text-muted)] py-2">
+                      <div key={day} className="text-center text-xs md:text-sm font-medium text-text-muted py-2">
                         {day}
                       </div>
                     ))}
@@ -302,14 +302,14 @@ export const BookingPage = () => {
                           onClick={() => !isPast && handleDateSelect(date)}
                           disabled={isPast}
                           className={`
-                            p-2 md:p-3 rounded-[var(--radius-md)] text-center transition-all text-sm
+                            p-2 md:p-3 rounded-md text-center transition-all text-sm
                             ${isSelected
-                              ? 'bg-[var(--color-accent)] text-white'
+                              ? 'bg-accent text-white'
                               : isToday
-                                ? 'bg-[var(--color-secondary)] text-[var(--color-accent)] font-medium'
+                                ? 'bg-secondary text-accent font-medium'
                                 : isPast
-                                  ? 'text-[var(--color-text-muted)]/50 cursor-not-allowed'
-                                  : 'hover:bg-[var(--color-secondary)] text-[var(--color-text-primary)]'
+                                  ? 'text-text-muted/50 cursor-not-allowed'
+                                  : 'hover:bg-secondary text-(--color-text-primary)'
                             }
                           `}
                         >
@@ -325,7 +325,7 @@ export const BookingPage = () => {
               {selectedDate && (
                 <Card>
                   <CardContent>
-                    <h4 className="font-medium text-[var(--color-text-primary)] mb-4 flex items-center gap-2">
+                    <h4 className="font-medium text-(--color-text-primary) mb-4 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       Available Times for {format(selectedDate, 'EEEE, MMMM d')}
                     </h4>
@@ -340,12 +340,12 @@ export const BookingPage = () => {
                             onClick={() => available && handleTimeSelect(time)}
                             disabled={!available}
                             className={`
-                              py-2.5 px-3 rounded-[var(--radius-md)] text-sm font-medium transition-all
+                              py-2.5 px-3 rounded-md text-sm font-medium transition-all
                               ${isSelected
-                                ? 'bg-[var(--color-accent)] text-white'
+                                ? 'bg-accent text-white'
                                 : available
-                                  ? 'bg-[var(--color-secondary)] text-[var(--color-text-primary)] hover:bg-[var(--color-accent)]/10 hover:text-[var(--color-accent)]'
-                                  : 'bg-[var(--color-secondary)]/50 text-[var(--color-text-muted)]/50 line-through cursor-not-allowed'
+                                  ? 'bg-secondary text-(--color-text-primary) hover:bg-accent/10 hover:text-accent'
+                                  : 'bg-secondary/50 text-text-muted/50 line-through cursor-not-allowed'
                               }
                             `}
                           >
@@ -362,30 +362,30 @@ export const BookingPage = () => {
             <div>
               <Card className="sticky top-24">
                 <CardContent>
-                  <h4 className="font-semibold text-[var(--color-text-primary)] mb-4">{t('booking_yourSelection')}</h4>
+                  <h4 className="font-semibold text-(--color-text-primary) mb-4">{t('booking_yourSelection')}</h4>
                   {selectedPackage && (
-                    <div className="pb-4 mb-4 border-b border-[var(--color-border)]">
-                      <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_package')}</p>
-                      <p className="font-medium text-[var(--color-text-primary)]">{selectedPackage.name}</p>
-                      <p className="text-sm text-[var(--color-accent)]">
+                    <div className="pb-4 mb-4 border-b border-border">
+                      <p className="text-xs text-text-muted mb-1">{t('booking_package')}</p>
+                      <p className="font-medium text-(--color-text-primary)">{selectedPackage.name}</p>
+                      <p className="text-sm text-accent">
                         {formatPrice(selectedPackage.price_cents, selectedPackage.currency)}
                       </p>
                     </div>
                   )}
                   {selectedDate && (
-                    <div className="pb-4 mb-4 border-b border-[var(--color-border)]">
-                      <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_dateTime')}</p>
-                      <p className="font-medium text-[var(--color-text-primary)]">
+                    <div className="pb-4 mb-4 border-b border-border">
+                      <p className="text-xs text-text-muted mb-1">{t('booking_dateTime')}</p>
+                      <p className="font-medium text-(--color-text-primary)">
                         {format(selectedDate, 'EEEE, MMMM d')}
                       </p>
-                      <p className="text-sm text-[var(--color-text-secondary)]">
+                      <p className="text-sm text-text-secondary">
                         {selectedTime || t('booking_selectDate')}
                       </p>
-                      <p className="text-xs text-[var(--color-text-muted)] mt-1">{timezone}</p>
+                      <p className="text-xs text-text-muted mt-1">{timezone}</p>
                     </div>
                   )}
                   {!selectedDate && (
-                    <p className="text-sm text-[var(--color-text-muted)] mb-4">
+                    <p className="text-sm text-text-muted mb-4">
                       {t('booking_selectDate')}
                     </p>
                   )}
@@ -407,46 +407,46 @@ export const BookingPage = () => {
             <div className="lg:col-span-2">
               <Card>
                 <CardContent>
-                  <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-6">{t('booking_confirm')}</h3>
+                  <h3 className="text-xl font-display text-(--color-text-primary) mb-6">{t('booking_confirm')}</h3>
                   
                   <div className="space-y-4 md:space-y-6">
-                    <div className="p-4 bg-[var(--color-secondary)] rounded-[var(--radius-lg)]">
-                      <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_package')}</p>
-                      <p className="font-medium text-[var(--color-text-primary)]">{selectedPackage.name}</p>
-                      <p className="text-sm text-[var(--color-text-secondary)]">
+                    <div className="p-4 bg-secondary rounded-lg">
+                      <p className="text-xs text-text-muted mb-1">{t('booking_package')}</p>
+                      <p className="font-medium text-(--color-text-primary)">{selectedPackage.name}</p>
+                      <p className="text-sm text-text-secondary">
                         {selectedPackage.duration_minutes} minutes
                       </p>
                     </div>
 
-                    <div className="p-4 bg-[var(--color-secondary)] rounded-[var(--radius-lg)]">
-                      <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_dateTime')}</p>
-                      <p className="font-medium text-[var(--color-text-primary)]">
+                    <div className="p-4 bg-secondary rounded-lg">
+                      <p className="text-xs text-text-muted mb-1">{t('booking_dateTime')}</p>
+                      <p className="font-medium text-(--color-text-primary)">
                         {format(selectedDate, 'EEEE, MMMM d, yyyy')}
                       </p>
-                      <p className="text-sm text-[var(--color-text-secondary)]">{selectedTime}</p>
-                      <p className="text-xs text-[var(--color-text-muted)] mt-1">
+                      <p className="text-sm text-text-secondary">{selectedTime}</p>
+                      <p className="text-xs text-text-muted mt-1">
                         Timezone: {timezone}
                       </p>
                     </div>
 
-                    <div className="p-4 bg-[var(--color-secondary)] rounded-[var(--radius-lg)]">
-                      <p className="text-xs text-[var(--color-text-muted)] mb-1">{t('booking_payment')}</p>
+                    <div className="p-4 bg-secondary rounded-lg">
+                      <p className="text-xs text-text-muted mb-1">{t('booking_payment')}</p>
                       <div className="space-y-3">
-                        <label className="flex items-center gap-3 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] cursor-pointer hover:border-[var(--color-accent)] transition-colors">
-                          <input type="radio" name="payment" value="paypal" defaultChecked className="accent-[var(--color-accent)]" />
-                          <span className="text-[var(--color-text-primary)]">{t('booking_paypal')}</span>
+                        <label className="flex items-center gap-3 p-3 bg-surface border border-border rounded-md cursor-pointer hover:border-accent transition-colors">
+                          <input type="radio" name="payment" value="paypal" defaultChecked className="accent-accent" />
+                          <span className="text-(--color-text-primary)">{t('booking_paypal')}</span>
                         </label>
-                        <label className="flex items-center gap-3 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] cursor-pointer hover:border-[var(--color-accent)] transition-colors">
-                          <input type="radio" name="payment" value="bank" className="accent-[var(--color-accent)]" />
-                          <span className="text-[var(--color-text-primary)]">{t('booking_bank')}</span>
+                        <label className="flex items-center gap-3 p-3 bg-surface border border-border rounded-md cursor-pointer hover:border-accent transition-colors">
+                          <input type="radio" name="payment" value="bank" className="accent-accent" />
+                          <span className="text-(--color-text-primary)">{t('booking_bank')}</span>
                         </label>
                       </div>
                     </div>
 
-                    <div className="p-4 bg-[var(--color-accent-soft)] rounded-[var(--radius-lg)] border border-[var(--color-accent)]/20">
+                    <div className="p-4 bg-accent-soft rounded-lg border border-accent/20">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[var(--color-text-secondary)]">{t('booking_total')}</span>
-                        <span className="text-2xl font-display text-[var(--color-accent)]">
+                        <span className="text-text-secondary">{t('booking_total')}</span>
+                        <span className="text-2xl font-display text-accent">
                           {formatPrice(selectedPackage.price_cents, selectedPackage.currency)}
                         </span>
                       </div>
@@ -459,7 +459,7 @@ export const BookingPage = () => {
             <div>
               <Card className="sticky top-24">
                 <CardContent>
-                  <h4 className="font-semibold text-[var(--color-text-primary)] mb-4">{t('booking_summary')}</h4>
+                  <h4 className="font-semibold text-(--color-text-primary) mb-4">{t('booking_summary')}</h4>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-[var(--color-text-muted)]">{t('booking_package')}</span>

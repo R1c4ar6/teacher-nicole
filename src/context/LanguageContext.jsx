@@ -67,14 +67,41 @@ const translations = {
     pricing_getStarted: 'Get Started',
     pricing_custom: 'Need a custom package? ',
     pricing_contact: 'Contact me',
+    pricing_currency: 'EUR',
 
     // Packages
     package_trial_name: 'Trial Lesson',
     package_trial_desc: 'Perfect for getting started',
+    package_trial_price: '10',
+    package_trial_duration: '45min',
+    package_trial_features: [
+      '45-minute session',
+      'Level assessment',
+      'Personalized learning plan',
+      'No commitment required',
+    ],
     package_weekly_name: 'Weekly Sessions',
     package_weekly_desc: 'Consistent progress every week',
+    package_weekly_price: '20',
+    package_weekly_duration: '60min',
+    package_weekly_features: [
+      '4 sessions per month',
+      '60-minute lessons',
+      'Homework & feedback',
+      'Progress tracking',
+      'Email support',
+    ],
     package_intensive_name: 'Intensive Package',
     package_intensive_desc: 'Maximum growth in shortest time',
+    package_intensive_price: '30',
+    package_intensive_duration: '60min',
+    package_intensive_features: [
+      '8 sessions per month',
+      'Priority scheduling',
+      'Custom study materials',
+      'WhatsApp support',
+      'Monthly progress report',
+    ],
 
     // FAQ
     faq_title: 'Frequently Asked Questions',
@@ -243,14 +270,41 @@ const translations = {
     pricing_getStarted: 'Comenzar',
     pricing_custom: '¿Necesitas un paquete personalizado? ',
     pricing_contact: 'Contáctame',
+    pricing_currency: 'EUR',
 
     // Packages
     package_trial_name: 'Clase de Prueba',
     package_trial_desc: 'Perfecto para comenzar',
+    package_trial_price: '10',
+    package_trial_duration: '45 minutos',
+    package_trial_features: [
+      'Sesión de 45 minutos',
+      'Evaluación de nivel',
+      'Plan de aprendizaje personalizado',
+      'Sin compromiso necesario',
+    ],
     package_weekly_name: 'Sesiones Semanales',
     package_weekly_desc: 'Progreso constante cada semana',
+    package_weekly_price: '20',
+    package_weekly_duration: '60 minutos',
+    package_weekly_features: [
+      '4 sesiones al mes',
+      'Sesiones de 60 minutos',
+      'Trabajos a domicilio y retroalimentación',
+      'Registro de progreso',
+      'Soporte por correo electrónico',
+    ],
     package_intensive_name: 'Paquete Intensivo',
     package_intensive_desc: 'Máximo crecimiento en el menor tiempo',
+    package_intensive_price: '30',
+    package_intensive_duration: '60 minutos',
+    package_intensive_features: [
+      '8 sesiones al mes',
+      'Programación prioritaria',
+      'Materiales de estudio personalizados',
+      'Soporte en WhatsApp',
+      'Informe de progreso mensual',
+    ],
 
     // FAQ
     faq_title: 'Preguntas Frecuentes',

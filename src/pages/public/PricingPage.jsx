@@ -7,11 +7,11 @@ import { Badge } from '../../components/ui/Badge';
 import { useLanguage } from '../../context/LanguageContext';
 import { getPackages } from '../../lib/supabase';
 
-const formatPrice = (cents, currency = 'USD') => {
-  return new Intl.NumberFormat('en-US', {
+const formatPrice = (cents, currency = t('pricing_currency')) => {
+  return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency,
-  }).format(cents / 100);
+  }).format(cents);
 };
 
 export const PricingPage = () => {
@@ -45,45 +45,28 @@ export const PricingPage = () => {
         id: 'trial',
         name: t('package_trial_name'),
         description: t('package_trial_desc'),
-        price_cents: 1500,
-        currency: 'USD',
-        duration_minutes: 30,
-        features: [
-          '30-minute session',
-          'Level assessment',
-          'Personalized learning plan',
-          'No commitment required',
-        ],
+        price_cents: t('package_trial_price'),
+        currency: t('pricing_currency'),
+        duration_minutes: t('package_trial_duration'),
+        features: t('package_trial_features')
       },
       {
         id: 'weekly',
         name: t('package_weekly_name'),
         description: t('package_weekly_desc'),
-        price_cents: 5500,
-        currency: 'USD',
-        duration_minutes: 60,
-        features: [
-          '4 sessions per month',
-          '60-minute lessons',
-          'Homework & feedback',
-          'Progress tracking',
-          'Email support',
-        ],
+        price_cents: t('package_weekly_price'),
+        currency: t('pricing_currency'),
+        duration_minutes: t('package_weekly_duration'),
+        features: t('package_weekly_features')
       },
       {
         id: 'intensive',
         name: t('package_intensive_name'),
         description: t('package_intensive_desc'),
-        price_cents: 9000,
-        currency: 'USD',
-        duration_minutes: 60,
-        features: [
-          '8 sessions per month',
-          'Priority scheduling',
-          'Custom study materials',
-          'WhatsApp support',
-          'Monthly progress report',
-        ],
+        price_cents: t('package_intensive_price'),
+        currency: t('pricing_currency'),
+        duration_minutes: t('package_intensive_duration'),
+        features: t('package_intensive_features')
       },
     ];
     
@@ -103,13 +86,13 @@ export const PricingPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-[var(--color-accent-soft)] to-[var(--color-background)]">
+      <section className="relative py-20 md:py-32 bg-linear-to-b from-accent-soft to-background">
         <div className="container-custom">
           <div className="text-center max-w-2xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display text-[var(--color-text-primary)] mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display text-(--color-text-primary) mb-6">
               {t('pricing_title')}
             </h1>
-            <p className="text-lg text-[var(--color-text-secondary)]">
+            <p className="text-lg text-text-secondary">
               {t('pricing_subtitle')}
             </p>
           </div>
@@ -128,7 +111,7 @@ export const PricingPage = () => {
                 <Card
                   key={pkg.id || index}
                   variant={index === 1 ? 'accent' : 'default'}
-                  className={`relative ${index === 1 ? 'md:-mt-4 md:mb-[-16px]' : ''}`}
+                  className={`relative ${index === 1 ? 'md:-mt-4 md:-mb-4' : ''}`}
                 >
                   {index === 1 && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -137,24 +120,24 @@ export const PricingPage = () => {
                   )}
                   <CardContent>
                     <div className="mb-6">
-                      <h3 className="text-xl font-display text-[var(--color-text-primary)] mb-1">
+                      <h3 className="text-xl font-display text-(--color-text-primary) mb-1">
                         {pkg.name}
                       </h3>
-                      <p className="text-sm text-[var(--color-text-muted)]">{pkg.description}</p>
+                      <p className="text-sm text-text-muted">{pkg.description}</p>
                     </div>
                     
                     <div className="mb-6">
-                      <span className="text-4xl font-display text-[var(--color-text-primary)]">
+                      <span className="text-4xl font-display text-(--color-text-primary)">
                         {formatPrice(pkg.price_cents, pkg.currency)}
                       </span>
-                      <span className="text-[var(--color-text-muted)]"> / {pkg.duration_minutes}min</span>
+                      <span className="text-text-muted"> / {pkg.duration_minutes}</span>
                     </div>
                     
                     <ul className="space-y-3 mb-8">
                       {pkg.features?.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3 text-sm text-[var(--color-text-secondary)]">
-                          <div className="w-5 h-5 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <Check className="w-3 h-3 text-[var(--color-success)]" />
+                        <li key={i} className="flex items-start gap-3 text-sm text-text-secondary">
+                          <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 text-success" />
                           </div>
                           {feature}
                         </li>

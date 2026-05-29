@@ -124,16 +124,16 @@ export const Header = () => {
                 </button>
 
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] shadow-lg py-2 animate-fade-in">
-                    <div className="px-4 py-2 border-b border-[var(--color-border)]">
-                      <p className="text-sm font-medium text-[var(--color-text-primary)]">
+                  <div className="absolute right-0 mt-2 w-56 bg-surface border border-border rounded-lg shadow-lg py-2 animate-fade-in">
+                    <div className="px-4 py-2 border-b border-border">
+                      <p className="text-sm font-medium text-(--color-text-primary)">
                         {profile?.full_name || 'User'}
                       </p>
-                      <p className="text-xs text-[var(--color-text-muted)] truncate">{profile?.email}</p>
+                      <p className="text-xs text-text-muted truncate">{profile?.email}</p>
                     </div>
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)] transition-colors"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-text-secondary hover:bg-secondary transition-colors"
                     >
                       <User className="w-4 h-4" />
                       {t('nav_dashboard')}
@@ -141,15 +141,15 @@ export const Header = () => {
                     {isAdmin && (
                       <Link
                         to="/admin"
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-[var(--color-accent)] hover:bg-[var(--color-accent-soft)] transition-colors"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-accent hover:bg-accent-soft transition-colors"
                       >
                         {t('nav_admin')}
                       </Link>
                     )}
-                    <div className="border-t border-[var(--color-border)] mt-2 pt-2">
+                    <div className="border-t border-border mt-2 pt-2">
                       <button
                         onClick={() => signOut()}
-                        className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-[var(--color-error)] hover:bg-[var(--color-error)]/5 transition-colors"
+                        className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-error hover:bg-error/5 transition-colors"
                       >
                         <LogOut className="w-4 h-4" />
                         {t('nav_signOut')}
@@ -172,7 +172,7 @@ export const Header = () => {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+            className="md:hidden p-2 text-text-secondary hover:text-(--color-text-primary)"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -182,14 +182,14 @@ export const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[var(--color-border)] animate-fade-in">
+          <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 link.action ? (
                   <button
                     key={link.to}
                     onClick={() => link.action()}
-                    className="px-4 py-3 text-base font-medium rounded-[var(--radius-md)] text-left text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)] transition-colors"
+                    className="px-4 py-3 text-base font-medium rounded-md text-left text-text-secondary hover:bg-secondary transition-colors"
                   >
                     {link.label}
                   </button>
@@ -198,11 +198,11 @@ export const Header = () => {
                     key={link.to}
                     to={link.to}
                     className={`
-                      px-4 py-3 text-base font-medium rounded-[var(--radius-md)]
+                      px-4 py-3 text-base font-medium rounded-md
                       transition-colors
                       ${location.pathname === link.to
-                        ? 'text-[var(--color-accent)] bg-[var(--color-accent-soft)]'
-                        : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)]'
+                        ? 'text-accent bg-accent-soft'
+                        : 'text-text-secondary hover:bg-secondary'
                       }
                     `}
                   >
@@ -212,7 +212,7 @@ export const Header = () => {
               ))}
             </div>
             
-            <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
+            <div className="mt-4 pt-4 border-t border-border">
               <div className="px-4 mb-4">
                 <LanguageSwitcher variant="dropdown" />
               </div>
@@ -220,17 +220,17 @@ export const Header = () => {
               <div className="flex flex-col gap-3">
                 {user ? (
                   <>
-                    <Link to="/dashboard" className="px-4 py-3 text-base font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)] rounded-[var(--radius-md)]">
+                    <Link to="/dashboard" className="px-4 py-3 text-base font-medium text-text-secondary hover:bg-secondary rounded-md">
                       {t('nav_dashboard')}
                     </Link>
                     {isAdmin && (
-                      <Link to="/admin" className="px-4 py-3 text-base font-medium text-[var(--color-accent)] hover:bg-[var(--color-accent-soft)] rounded-[var(--radius-md)]">
+                      <Link to="/admin" className="px-4 py-3 text-base font-medium text-accent hover:bg-accent-soft rounded-md">
                         {t('nav_admin')}
                       </Link>
                     )}
                     <button
                       onClick={() => signOut()}
-                      className="px-4 py-3 text-base font-medium text-[var(--color-error)] hover:bg-[var(--color-error)]/5 rounded-[var(--radius-md)] text-left"
+                      className="px-4 py-3 text-base font-medium text-error hover:bg-error/5 rounded-md text-left"
                     >
                       {t('nav_signOut')}
                     </button>
