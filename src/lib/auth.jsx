@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import supabase from './supabase';
+import supabase, { getProfile } from './supabase';
 
 const AuthContext = createContext({});
 
@@ -13,18 +13,20 @@ export const AuthProvider = ({ children }) => {
 
   const fetchProfile = async (userId) => {
     if (!userId) return;
+    /* console.log('Fetching profile for:', userId); */
     try {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
+      const { data, error } = await getProfile(userId);
 
-      if (data) {
-        setProfile(data);
-      } else {
+      /* console.log('Profile data:', data);
+      console.log('Profile error:', error); */
+
+      if (error) {
+        console.error(error);
         setProfile(null);
+        return;
       }
+
+      setProfile(data);
     } catch (err) {
       console.error('Error fetching profile:', err);
       setProfile(null);

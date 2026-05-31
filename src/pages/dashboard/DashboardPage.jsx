@@ -78,10 +78,10 @@ export const DashboardPage = () => {
       <div className="container-custom">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-12">
           <div>
-            <h1 className="text-3xl md:text-4xl font-display text-[var(--color-text-primary)] mb-2">
-              {t('dashboard_welcome')}{profile?.full_name?.split(' ')[0] || 'there'}!
+            <h1 className="text-3xl md:text-4xl font-display text-(--color-text-primary) mb-2">
+              {t('dashboard_welcome')}{profile?.full_name?.split(' ')[0]}!
             </h1>
-            <p className="text-[var(--color-text-secondary)]">{t('dashboard_subtitle')}</p>
+            <p className="text-text-secondary">{t('dashboard_subtitle')}</p>
           </div>
           <Link to="/book">
             <Button>
@@ -94,22 +94,22 @@ export const DashboardPage = () => {
         <div className="grid lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 space-y-8">
             <section>
-              <h2 className="text-xl font-semibold text-[var(--color-text-primary)] mb-4">{t('dashboard_upcoming')}</h2>
+              <h2 className="text-xl font-semibold text-(--color-text-primary) mb-4">{t('dashboard_upcoming')}</h2>
               {loading ? (
                 <div className="space-y-4">
                   {[1, 2].map((i) => (
                     <Card key={i} className="animate-pulse">
                       <CardContent>
-                        <div className="h-24 bg-[var(--color-secondary)]/50 rounded-[var(--radius-md)]" />
+                        <div className="h-24 bg-secondary/50 rounded-md" />
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               ) : upcomingBookings.length === 0 ? (
                 <Card className="text-center py-12">
-                  <Calendar className="w-12 h-12 text-[var(--color-text-muted)] mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-[var(--color-text-primary)] mb-2">{t('dashboard_noUpcoming')}</h3>
-                  <p className="text-[var(--color-text-secondary)] mb-4">{t('dashboard_noUpcomingDesc')}</p>
+                  <Calendar className="w-12 h-12 text-text-muted mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-(--color-text-primary) mb-2">{t('dashboard_noUpcoming')}</h3>
+                  <p className="text-text-secondary mb-4">{t('dashboard_noUpcomingDesc')}</p>
                   <Link to="/book">
                     <Button>{t('dashboard_bookLesson')}</Button>
                   </Link>
@@ -129,10 +129,10 @@ export const DashboardPage = () => {
                                 <Badge variant="warning">{t('payment_pending')}</Badge>
                               )}
                             </div>
-                            <h3 className="text-lg font-medium text-[var(--color-text-primary)] mb-1">
+                            <h3 className="text-lg font-medium text-(--color-text-primary) mb-1">
                               {booking.package?.name || 'English Lesson'}
                             </h3>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-secondary)]">
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
                               <span className="flex items-center gap-1.5">
                                 <Calendar className="w-4 h-4" />
                                 {format(parseISO(booking.start_time), 'EEEE, MMMM d, yyyy')}

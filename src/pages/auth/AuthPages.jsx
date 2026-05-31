@@ -219,7 +219,7 @@ export const RegisterPage = () => {
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-secondary)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-surface border border-border rounded-md text-(--color-text-primary) font-medium hover:bg-secondary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -232,10 +232,10 @@ export const RegisterPage = () => {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-[var(--color-border)]" />
+                <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center">
-                <span className="px-4 bg-[var(--color-surface)] text-sm text-[var(--color-text-muted)]">{t('login_or')}</span>
+                <span className="px-4 bg-surface text-sm text-text-muted">{t('login_or')}</span>
               </div>
             </div>
 
@@ -273,9 +273,9 @@ export const RegisterPage = () => {
               </Button>
             </form>
 
-            <p className="text-center text-sm text-[var(--color-text-secondary)]">
+            <p className="text-center text-sm text-text-secondary">
               {t('register_haveAccount')}
-              <Link to="/auth/login" className="text-[var(--color-accent)] hover:underline font-medium">
+              <Link to="/auth/login" className="text-accent hover:underline font-medium">
                 {t('register_signin')}
               </Link>
             </p>

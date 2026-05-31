@@ -7,58 +7,53 @@ import { Card, CardContent } from '../../components/ui/Card';
 import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
 import { getPackages, getBookings, createBooking } from '../../lib/supabase';
+import { formatPrice } from '../public/PricingPage';
 
-const TIME_SLOTS = [
-  '09:00', '10:00', '11:00', '12:00',
-  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
-];
-
-const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-const formatPrice = (cents, currency = 'USD') => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(cents / 100);
-};
-
-const defaultPackages = [
-  {
-    id: 'trial',
-    name: 'Trial Lesson',
-    description: 'Perfect for getting started',
-    price_cents: 1500,
-    currency: 'USD',
-    duration_minutes: 30,
-    features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
-    is_active: true,
-    sort_order: 1,
-  },
-  {
-    id: 'weekly',
-    name: 'Weekly Sessions',
-    description: 'Consistent progress every week',
-    price_cents: 5500,
-    currency: 'USD',
-    duration_minutes: 60,
-    features: ['4 sessions per month', '60-minute lessons', 'Homework & feedback', 'Progress tracking', 'Email support'],
-    is_active: true,
-    sort_order: 2,
-  },
-  {
-    id: 'monthly',
-    name: 'Intensive Package',
-    description: 'Maximum growth in shortest time',
-    price_cents: 9000,
-    currency: 'USD',
-    duration_minutes: 60,
-    features: ['8 sessions per month', 'Priority scheduling', 'Custom study materials', 'WhatsApp support', 'Monthly progress report'],
-    is_active: true,
-    sort_order: 3,
-  },
-];
 
 export const BookingPage = () => {
+
+  const TIME_SLOTS = [
+    '09:00', '10:00', '11:00', '12:00',
+    '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
+  ];
+
+  const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const defaultPackages = [
+    {
+      id: 'trial',
+      name: 'Trial Lesson',
+      description: 'Perfect for getting started',
+      price_cents: 1500,
+      currency: 'USD',
+      duration_minutes: 30,
+      features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
+      is_active: true,
+      sort_order: 1,
+    },
+    {
+      id: 'weekly',
+      name: 'Weekly Sessions',
+      description: 'Consistent progress every week',
+      price_cents: 5500,
+      currency: 'USD',
+      duration_minutes: 60,
+      features: ['4 sessions per month', '60-minute lessons', 'Homework & feedback', 'Progress tracking', 'Email support'],
+      is_active: true,
+      sort_order: 2,
+    },
+    {
+      id: 'monthly',
+      name: 'Intensive Package',
+      description: 'Maximum growth in shortest time',
+      price_cents: 9000,
+      currency: 'USD',
+      duration_minutes: 60,
+      features: ['8 sessions per month', 'Priority scheduling', 'Custom study materials', 'WhatsApp support', 'Monthly progress report'],
+      is_active: true,
+      sort_order: 3,
+    },
+  ];
   const { t } = useLanguage();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -116,7 +111,7 @@ export const BookingPage = () => {
   };
 
   const isSlotAvailable = (date, time) => {
-    const slot = bookedSlots.find(s => 
+    const slot = bookedSlots.find(s =>
       isSameDay(parseISO(s.date), date) && s.time === time && s.status !== 'cancelled'
     );
     return !slot;
@@ -192,18 +187,16 @@ export const BookingPage = () => {
           {[1, 2, 3].map((s) => (
             <div key={s} className="flex items-center gap-2 md:gap-4">
               <div
-                className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
-                  s <= step
-                    ? 'bg-accent text-white'
-                    : 'bg-secondary text-text-muted'
-                }`}
+                className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${s <= step
+                  ? 'bg-accent text-white'
+                  : 'bg-secondary text-text-muted'
+                  }`}
               >
                 {s < step ? <Check className="w-5 h-5" /> : s}
               </div>
               {s < 3 && (
-                <div className={`flex-1 h-1 max-w-10 md:max-w-20 rounded-full ${
-                  s < step ? 'bg-accent' : 'bg-secondary'
-                }`} />
+                <div className={`flex-1 h-1 max-w-10 md:max-w-20 rounded-full ${s < step ? 'bg-accent' : 'bg-secondary'
+                  }`} />
               )}
             </div>
           ))}
@@ -408,7 +401,7 @@ export const BookingPage = () => {
               <Card>
                 <CardContent>
                   <h3 className="text-xl font-display text-(--color-text-primary) mb-6">{t('booking_confirm')}</h3>
-                  
+
                   <div className="space-y-4 md:space-y-6">
                     <div className="p-4 bg-secondary rounded-lg">
                       <p className="text-xs text-text-muted mb-1">{t('booking_package')}</p>
