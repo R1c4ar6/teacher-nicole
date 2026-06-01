@@ -7,7 +7,7 @@ import { Badge } from '../../components/ui/Badge';
 import { useLanguage } from '../../context/LanguageContext';
 import { getPackages } from '../../lib/supabase';
 
-const formatPrice = (cents, currency = t('pricing_currency')) => {
+export const formatPrice = (cents, currency = t('pricing_currency')) => {
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency,
@@ -130,7 +130,7 @@ export const PricingPage = () => {
                       <span className="text-4xl font-display text-(--color-text-primary)">
                         {formatPrice(pkg.price_cents, pkg.currency)}
                       </span>
-                      <span className="text-text-muted"> / {pkg.duration_minutes}</span>
+                      <span className="text-text-muted"> / {pkg.duration_minutes}min</span>
                     </div>
                     
                     <ul className="space-y-3 mb-8">

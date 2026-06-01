@@ -73,7 +73,7 @@ const translations = {
     package_trial_name: 'Trial Lesson',
     package_trial_desc: 'Perfect for getting started',
     package_trial_price: '10',
-    package_trial_duration: '45min',
+    package_trial_duration: '45',
     package_trial_features: [
       '45-minute session',
       'Level assessment',
@@ -83,7 +83,7 @@ const translations = {
     package_weekly_name: 'Weekly Sessions',
     package_weekly_desc: 'Consistent progress every week',
     package_weekly_price: '20',
-    package_weekly_duration: '60min',
+    package_weekly_duration: '60',
     package_weekly_features: [
       '4 sessions per month',
       '60-minute lessons',
@@ -94,7 +94,7 @@ const translations = {
     package_intensive_name: 'Intensive Package',
     package_intensive_desc: 'Maximum growth in shortest time',
     package_intensive_price: '30',
-    package_intensive_duration: '60min',
+    package_intensive_duration: '60',
     package_intensive_features: [
       '8 sessions per month',
       'Priority scheduling',
@@ -276,7 +276,7 @@ const translations = {
     package_trial_name: 'Clase de Prueba',
     package_trial_desc: 'Perfecto para comenzar',
     package_trial_price: '10',
-    package_trial_duration: '45 minutos',
+    package_trial_duration: '45',
     package_trial_features: [
       'Sesión de 45 minutos',
       'Evaluación de nivel',
@@ -286,7 +286,7 @@ const translations = {
     package_weekly_name: 'Sesiones Semanales',
     package_weekly_desc: 'Progreso constante cada semana',
     package_weekly_price: '20',
-    package_weekly_duration: '60 minutos',
+    package_weekly_duration: '60',
     package_weekly_features: [
       '4 sesiones al mes',
       'Sesiones de 60 minutos',
@@ -297,7 +297,7 @@ const translations = {
     package_intensive_name: 'Paquete Intensivo',
     package_intensive_desc: 'Máximo crecimiento en el menor tiempo',
     package_intensive_price: '30',
-    package_intensive_duration: '60 minutos',
+    package_intensive_duration: '60',
     package_intensive_features: [
       '8 sesiones al mes',
       'Programación prioritaria',

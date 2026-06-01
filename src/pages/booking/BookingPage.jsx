@@ -12,6 +12,8 @@ import { formatPrice } from '../public/PricingPage';
 
 export const BookingPage = () => {
 
+  const { t } = useLanguage();
+
   const TIME_SLOTS = [
     '09:00', '10:00', '11:00', '12:00',
     '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'
@@ -22,39 +24,33 @@ export const BookingPage = () => {
   const defaultPackages = [
     {
       id: 'trial',
-      name: 'Trial Lesson',
-      description: 'Perfect for getting started',
-      price_cents: 1500,
-      currency: 'USD',
-      duration_minutes: 30,
-      features: ['30-minute session', 'Level assessment', 'Personalized learning plan', 'No commitment required'],
-      is_active: true,
-      sort_order: 1,
+      name: t('package_trial_name'),
+      description: t('package_trial_desc'),
+      price_cents: t('package_trial_price'),
+      currency: t('pricing_currency'),
+      duration_minutes: t('package_trial_duration'),
+      features: t('package_trial_features'),
     },
     {
       id: 'weekly',
-      name: 'Weekly Sessions',
-      description: 'Consistent progress every week',
-      price_cents: 5500,
-      currency: 'USD',
-      duration_minutes: 60,
-      features: ['4 sessions per month', '60-minute lessons', 'Homework & feedback', 'Progress tracking', 'Email support'],
-      is_active: true,
-      sort_order: 2,
+      name: t('package_weekly_name'),
+      description: t('package_weekly_desc'),
+      price_cents: t('package_weekly_price'),
+      currency: t('pricing_currency'),
+      duration_minutes: t('package_weekly_duration'),
+      features: t('package_weekly_features'),
     },
     {
       id: 'monthly',
-      name: 'Intensive Package',
-      description: 'Maximum growth in shortest time',
-      price_cents: 9000,
-      currency: 'USD',
-      duration_minutes: 60,
-      features: ['8 sessions per month', 'Priority scheduling', 'Custom study materials', 'WhatsApp support', 'Monthly progress report'],
-      is_active: true,
-      sort_order: 3,
+      name: t('package_intensive_name'),
+      description: t('package_intensive_desc'),
+      price_cents: t('package_intensive_price'),
+      currency: t('pricing_currency'),
+      duration_minutes: t('package_intensive_duration'),
+      features: t('package_intensive_features')
     },
   ];
-  const { t } = useLanguage();
+
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -69,20 +65,25 @@ export const BookingPage = () => {
   const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const { data } = await getPackages();
-        if (data && data.length > 0) {
-          setPackages(data);
-          setSelectedPackage(data[0]);
-        }
-      } catch (err) {
-        console.error('Error fetching packages:', err);
+  const fetchPackages = async () => {
+    setLoading(true);
+
+    try {
+      const { data } = await getPackages();
+
+      if (data && data.length > 0) {
+        setPackages(data);
+        setSelectedPackage(data[0]);
       }
+    } catch (err) {
+      console.error('Error fetching packages:', err);
+    } finally {
       setLoading(false);
-    };
-    fetchPackages();
-  }, []);
+    }
+  };
+
+  fetchPackages();
+}, []);
 
   useEffect(() => {
     if (user) {
@@ -203,35 +204,45 @@ export const BookingPage = () => {
         </div>
 
         {step === 1 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {packages.map((pkg) => (
-              <Card
-                key={pkg.id}
-                variant={selectedPackage?.id === pkg.id ? 'accent' : 'hover'}
-                onClick={() => setSelectedPackage(pkg)}
-                className={`cursor-pointer ${selectedPackage?.id === pkg.id ? 'ring-2 ring-accent' : ''}`}
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {packages.map((pkg) => (
+                <Card
+                  key={pkg.id}
+                  variant={selectedPackage?.id === pkg.id ? 'accent' : 'hover'}
+                  onClick={() => setSelectedPackage(pkg)}
+                  className={`cursor-pointer ${selectedPackage?.id === pkg.id ? 'ring-2 ring-accent' : ''}`}
+                >
+                  <CardContent>
+                    <h3 className="text-lg font-display text-(--color-text-primary) mb-1">{pkg.name}</h3>
+                    <p className="text-sm text-text-muted mb-4">{pkg.description}</p>
+                    <div className="mb-4">
+                      <span className="text-2xl font-display text-(--color-text-primary)">
+                        {formatPrice(pkg.price_cents, pkg.currency)}
+                      </span>
+                      <span className="text-text-muted"> / {pkg.duration_minutes}min</span>
+                    </div>
+                    <ul className="space-y-2">
+                      {pkg.features?.map((feature, i) => (
+                        <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
+                          <div className="w-2 h-2 bg-accent rounded-full shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Button
+                onClick={handleContinue}
+                disabled={!selectedPackage}
               >
-                <CardContent>
-                  <h3 className="text-lg font-display text-(--color-text-primary) mb-1">{pkg.name}</h3>
-                  <p className="text-sm text-text-muted mb-4">{pkg.description}</p>
-                  <div className="mb-4">
-                    <span className="text-2xl font-display text-(--color-text-primary)">
-                      {formatPrice(pkg.price_cents, pkg.currency)}
-                    </span>
-                    <span className="text-text-muted"> / {pkg.duration_minutes}min</span>
-                  </div>
-                  <ul className="space-y-2">
-                    {pkg.features?.map((feature, i) => (
-                      <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
-                        <div className="w-2 h-2 bg-accent rounded-full shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                {t('booking_continue')}
+              </Button>
+            </div>
+          </>
         )}
 
         {step === 2 && (
