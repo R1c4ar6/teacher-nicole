@@ -6,8 +6,9 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
-import { getPackages, getBookings, createBooking } from '../../lib/supabase';
+import { getPackages, getBookings, createBooking, getAvailableSlots } from '../../lib/supabase';
 import { formatPrice } from '../public/PricingPage';
+import { isBefore, startOfDay } from 'date-fns';
 
 
 export const BookingPage = () => {
@@ -111,12 +112,12 @@ export const BookingPage = () => {
     return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
   };
 
-  const isSlotAvailable = (date, time) => {
+  /* const isSlotAvailable = (date, time) => {
     const slot = bookedSlots.find(s =>
       isSameDay(parseISO(s.date), date) && s.time === time && s.status !== 'cancelled'
     );
     return !slot;
-  };
+  }; */
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -298,7 +299,7 @@ export const BookingPage = () => {
                     {weekDays.map((date) => {
                       const isSelected = selectedDate && isSameDay(date, selectedDate);
                       const isToday = isSameDay(date, new Date());
-                      const isPast = date < new Date() && !isToday;
+                      const isPast = isBefore(startOfDay(date),startOfDay(new Date()))
 
                       return (
                         <button
@@ -335,7 +336,7 @@ export const BookingPage = () => {
                     </h4>
                     <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                       {TIME_SLOTS.map((time) => {
-                        const available = isSlotAvailable(selectedDate, time);
+                        const available = getAvailableSlots(selectedDate, time);
                         const isSelected = selectedTime === time;
 
                         return (
