@@ -49,13 +49,13 @@ export const LoginPage = () => {
       <div className="w-full max-w-md animate-fade-in-up">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center">
+            <div className="w-10 h-10 rounded-md flex items-center justify-center" style={{ backgroundColor: 'var(--color-accent)' }}>
               <BookOpen className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display text-xl text-(--color-text-primary)">Teacher Nicole</span>
+            <span className="font-display text-xl" style={{ color: 'var(--color-text-primary)' }}>Teacher Nicole</span>
           </Link>
-          <h1 className="text-3xl font-display text-(--color-text-primary) mb-2">{t('login_title')}</h1>
-          <p className="text-text-secondary">{t('login_subtitle')}</p>
+          <h1 className="text-3xl font-display mb-2" style={{ color: 'var(--color-text-primary)' }}>{t('login_title')}</h1>
+          <p style={{ color: 'var(--color-text-secondary)' }}>{t('login_subtitle')}</p>
         </div>
 
         <Card>
