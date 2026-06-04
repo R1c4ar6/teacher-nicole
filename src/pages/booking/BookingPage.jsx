@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
-import { getPackages, getBookings, createBooking, getAvailableSlots } from '../../lib/supabase';
+import { getPackages, getBookings, createBooking, getAvailableSlots, getTutorId, getBookedSlotsForDay } from '../../lib/supabase';
 import { formatPrice } from '../public/PricingPage';
 import { isBefore, startOfDay } from 'date-fns';
 
@@ -64,27 +64,87 @@ export const BookingPage = () => {
   const [bookedSlots, setBookedSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [unavailableSlots, setUnavailableSlots] = useState([]);
 
-  useEffect(() => {
-  const fetchPackages = async () => {
-    setLoading(true);
+ /*  useEffect(() => {
+  if (!selectedDate) return;
 
-    try {
-      const { data } = await getPackages();
+  const loadBookedSlots = async () => {
+    const start = new Date(selectedDate);
+    start.setHours(0, 0, 0, 0);
 
-      if (data && data.length > 0) {
-        setPackages(data);
-        setSelectedPackage(data[0]);
-      }
-    } catch (err) {
-      console.error('Error fetching packages:', err);
-    } finally {
-      setLoading(false);
+    const end = new Date(selectedDate);
+    end.setHours(23, 59, 59, 999);
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select('start_time')
+      .in('status', ['pending', 'confirmed'])
+      .gte('start_time', start.toISOString())
+      .lte('start_time', end.toISOString());
+
+    if (!error) {
+      setUnavailableSlots(
+        data.map(slot =>
+          format(parseISO(slot.start_time), 'HH:mm')
+        )
+      );
     }
   };
 
-  fetchPackages();
-}, []);
+  loadBookedSlots();
+}, [selectedDate]); */
+
+  useEffect(() => {
+    if (!selectedDate) return;
+
+    const loadAvailableSlots = async () => {
+      setLoadingSlots(true);
+
+      try {
+        const dateString = format(selectedDate, 'yyyy-MM-dd');
+
+        const { data, error } = await getAvailableSlots(
+          dateString,
+          dateString
+        );
+
+        if (error) throw error;
+
+        setAvailableSlots(data || []);
+      } catch (err) {
+        console.error('Failed to load slots:', err);
+        setAvailableSlots([]);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
+
+    loadAvailableSlots();
+  }, [selectedDate]);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      setLoading(true);
+
+      try {
+        const { data } = await getPackages();
+
+        if (data && data.length > 0) {
+          setPackages(data);
+          setSelectedPackage(data[0]);
+        }
+      } catch (err) {
+        console.error('Error fetching packages:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -112,12 +172,11 @@ export const BookingPage = () => {
     return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
   };
 
-  /* const isSlotAvailable = (date, time) => {
-    const slot = bookedSlots.find(s =>
-      isSameDay(parseISO(s.date), date) && s.time === time && s.status !== 'cancelled'
+  const isSlotAvailable = (time) => {
+    return availableSlots.some(
+      slot => slot.slot_time.slice(0, 5) === time
     );
-    return !slot;
-  }; */
+  };
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -145,6 +204,10 @@ export const BookingPage = () => {
 
     setIsBooking(true);
     try {
+
+      const tutorId = await getTutorId();
+      if (!tutorId) throw new Error('No admin tutor id found');
+
       const startTime = new Date(selectedDate);
       const [hours, minutes] = selectedTime.split(':');
       startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
@@ -155,6 +218,7 @@ export const BookingPage = () => {
       const { data, error } = await createBooking({
         student_id: user.id,
         package_id: selectedPackage.id,
+        tutor_id: tutorId,
         start_time: startTime.toISOString(),
         end_time: endTime.toISOString(),
         status: 'pending',
@@ -299,7 +363,7 @@ export const BookingPage = () => {
                     {weekDays.map((date) => {
                       const isSelected = selectedDate && isSameDay(date, selectedDate);
                       const isToday = isSameDay(date, new Date());
-                      const isPast = isBefore(startOfDay(date),startOfDay(new Date()))
+                      const isPast = isBefore(startOfDay(date), startOfDay(new Date()))
 
                       return (
                         <button
@@ -467,25 +531,25 @@ export const BookingPage = () => {
                   <h4 className="font-semibold text-(--color-text-primary) mb-4">{t('booking_summary')}</h4>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-[var(--color-text-muted)]">{t('booking_package')}</span>
-                      <span className="text-[var(--color-text-primary)]">{selectedPackage.name}</span>
+                      <span className="text-text-muted">{t('booking_package')}</span>
+                      <span className="text-(--color-text-primary)">{selectedPackage.name}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[var(--color-text-muted)]">{t('booking_duration')}</span>
-                      <span className="text-[var(--color-text-primary)]">{selectedPackage.duration_minutes} min</span>
+                      <span className="text-text-muted">{t('booking_duration')}</span>
+                      <span className="text-(--color-text-primary)">{selectedPackage.duration_minutes} min</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[var(--color-text-muted)]">{t('booking_date')}</span>
-                      <span className="text-[var(--color-text-primary)]">{format(selectedDate, 'MMM d, yyyy')}</span>
+                      <span className="text-text-muted">{t('booking_date')}</span>
+                      <span className="text-(--color-text-primary)">{format(selectedDate, 'MMM d, yyyy')}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-[var(--color-text-muted)]">{t('booking_time')}</span>
-                      <span className="text-[var(--color-text-primary)]">{selectedTime}</span>
+                      <span className="text-text-muted">{t('booking_time')}</span>
+                      <span className="text-(--color-text-primary)">{selectedTime}</span>
                     </div>
-                    <div className="pt-3 border-t border-[var(--color-border)]">
+                    <div className="pt-3 border-t border-border">
                       <div className="flex justify-between">
-                        <span className="font-semibold text-[var(--color-text-primary)]">{t('booking_total')}</span>
-                        <span className="font-semibold text-[var(--color-accent)]">
+                        <span className="font-semibold text-(--color-text-primary)">{t('booking_total')}</span>
+                        <span className="font-semibold text-accent">
                           {formatPrice(selectedPackage.price_cents, selectedPackage.currency)}
                         </span>
                       </div>

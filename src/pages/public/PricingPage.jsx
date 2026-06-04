@@ -159,9 +159,9 @@ export const PricingPage = () => {
             })}
           </div>
 
-          <p className="text-center text-sm text-[var(--color-text-muted)] mt-10">
+          <p className="text-center text-sm text-text-muted mt-10">
             {t('pricing_custom')}
-            <Link to="/#contact" className="text-[var(--color-accent)] hover:underline font-medium">
+            <Link to="/#contact" className="text-accent hover:underline font-medium">
               {t('pricing_contact')}
             </Link>
           </p>
@@ -169,16 +169,16 @@ export const PricingPage = () => {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 md:py-32 bg-[var(--color-secondary)]">
+      <section className="py-20 md:py-32 bg-secondary">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display text-[var(--color-text-primary)] mb-4">
+              <h2 className="text-3xl md:text-4xl font-display text-(--color-text-primary) mb-4">
                 {t('faq_title')}
               </h2>
-              <p className="text-[var(--color-text-secondary)]">
+              <p className="text-text-secondary">
                 {t('faq_subtitle')}
-                <Link to="/#contact" className="text-[var(--color-accent)] hover:underline">
+                <Link to="/#contact" className="text-accent hover:underline">
                   {t('faq_contact')}
                 </Link>
               </p>
@@ -188,21 +188,21 @@ export const PricingPage = () => {
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-lg)] overflow-hidden"
+                  className="bg-surface border border-border rounded-lg overflow-hidden"
                 >
                   <button
                     className="w-full px-6 py-5 text-left flex items-center justify-between gap-4"
                     onClick={() => setOpenFaq(openFaq === index ? null : index)}
                   >
-                    <span className="font-medium text-[var(--color-text-primary)] pr-4">{faq.question}</span>
+                    <span className="font-medium text-(--color-text-primary) pr-4">{faq.question}</span>
                     <ChevronDown
-                      className={`w-5 h-5 text-[var(--color-text-muted)] flex-shrink-0 transition-transform duration-200 ${
+                      className={`w-5 h-5 text-text-muted shrink-0 transition-transform duration-200 ${
                         openFaq === index ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
                   {openFaq === index && (
-                    <div className="px-6 pb-5 text-[var(--color-text-secondary)] leading-relaxed animate-fade-in">
+                    <div className="px-6 pb-5 text-text-secondary leading-relaxed animate-fade-in">
                       {faq.answer}
                     </div>
                   )}
@@ -214,14 +214,14 @@ export const PricingPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[var(--color-background)]">
+      <section className="py-20 bg-background">
         <div className="container-custom text-center">
           <div className="max-w-xl mx-auto">
-            <HelpCircle className="w-12 h-12 text-[var(--color-accent)] mx-auto mb-6" />
-            <h2 className="text-2xl md:text-3xl font-display text-[var(--color-text-primary)] mb-4">
+            <HelpCircle className="w-12 h-12 text-accent mx-auto mb-6" />
+            <h2 className="text-2xl md:text-3xl font-display text-(--color-text-primary) mb-4">
               {t('faq_still')}
             </h2>
-            <p className="text-[var(--color-text-secondary)] mb-6">
+            <p className="text-text-secondary mb-6">
               {t('contact_subtitle')}
             </p>
             <Link to="/#contact">

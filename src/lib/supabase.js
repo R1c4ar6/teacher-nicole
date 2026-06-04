@@ -176,6 +176,21 @@ export const getAvailableSlots = async (startDate, endDate) => {
   }
 };
 
+export const getBookedSlotsForDay = async (date) => {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  return await supabase
+    .from('bookings')
+    .select('start_time')
+    .in('status', ['pending', 'confirmed'])
+    .gte('start_time', startOfDay.toISOString())
+    .lte('start_time', endOfDay.toISOString());
+};
+
 export const getSettings = async (key) => {
   try {
     const { data, error } = await supabase
@@ -187,5 +202,26 @@ export const getSettings = async (key) => {
   } catch (err) {
     console.error('getSettings error:', err);
     return { data: null, error: err };
+  }
+};
+
+export const getTutorId = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('role', 'admin')
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    return data?.id ?? null;
+  } catch (err) {
+    console.error('getTutorId error:', err);
+    return null;
   }
 };
