@@ -166,29 +166,14 @@ export const submitTestimonial = async (testimonial) => {
   }
 };
 
-export const getAvailableSlots = async (startDate, endDate) => {
+export const getAvailableSlots = async (startDate, endDate, tutorId) => {
   try {
-    const { data, error } = await supabase.rpc('get_available_slots', { start_date: startDate, end_date: endDate });
+    const { data, error } = await supabase.rpc('get_available_slots', { f_start_date: startDate, f_end_date: endDate, f_tutor_id: tutorId});
     return { data: data || [], error };
   } catch (err) {
     console.error('getAvailableSlots error:', err);
     return { data: [], error: err };
   }
-};
-
-export const getBookedSlotsForDay = async (date) => {
-  const startOfDay = new Date(date);
-  startOfDay.setHours(0, 0, 0, 0);
-
-  const endOfDay = new Date(date);
-  endOfDay.setHours(23, 59, 59, 999);
-
-  return await supabase
-    .from('bookings')
-    .select('start_time')
-    .in('status', ['pending', 'confirmed'])
-    .gte('start_time', startOfDay.toISOString())
-    .lte('start_time', endOfDay.toISOString());
 };
 
 export const getSettings = async (key) => {

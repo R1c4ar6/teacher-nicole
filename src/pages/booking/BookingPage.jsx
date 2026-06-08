@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { useAuth } from '../../lib/auth';
 import { useLanguage } from '../../context/LanguageContext';
-import { getPackages, getBookings, createBooking, getAvailableSlots, getTutorId, getBookedSlotsForDay } from '../../lib/supabase';
+import { getPackages, getBookings, createBooking, getAvailableSlots, getTutorId } from '../../lib/supabase';
 import { formatPrice } from '../public/PricingPage';
 import { isBefore, startOfDay } from 'date-fns';
 
@@ -67,48 +67,32 @@ export const BookingPage = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [unavailableSlots, setUnavailableSlots] = useState([]);
+  const [tutorId, setTutorId] = useState(null);
 
- /*  useEffect(() => {
-  if (!selectedDate) return;
-
-  const loadBookedSlots = async () => {
-    const start = new Date(selectedDate);
-    start.setHours(0, 0, 0, 0);
-
-    const end = new Date(selectedDate);
-    end.setHours(23, 59, 59, 999);
-
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('start_time')
-      .in('status', ['pending', 'confirmed'])
-      .gte('start_time', start.toISOString())
-      .lte('start_time', end.toISOString());
-
-    if (!error) {
-      setUnavailableSlots(
-        data.map(slot =>
-          format(parseISO(slot.start_time), 'HH:mm')
-        )
-      );
-    }
-  };
-
-  loadBookedSlots();
-}, [selectedDate]); */
 
   useEffect(() => {
-    if (!selectedDate) return;
+    const init = async () => {
+      const id = await getTutorId();
+      setTutorId(id);
+    };
+    init();
+  }, []);
+
+
+  useEffect(() => {
+    if (!selectedDate || !user || !tutorId) return;
 
     const loadAvailableSlots = async () => {
       setLoadingSlots(true);
+      setSelectedTime(null); // Clear time when date changes
 
       try {
         const dateString = format(selectedDate, 'yyyy-MM-dd');
 
         const { data, error } = await getAvailableSlots(
           dateString,
-          dateString
+          dateString,
+          tutorId
         );
 
         if (error) throw error;
@@ -123,7 +107,9 @@ export const BookingPage = () => {
     };
 
     loadAvailableSlots();
-  }, [selectedDate]);
+  }, [selectedDate, tutorId]);
+
+
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -205,9 +191,6 @@ export const BookingPage = () => {
     setIsBooking(true);
     try {
 
-      const tutorId = await getTutorId();
-      if (!tutorId) throw new Error('No admin tutor id found');
-
       const startTime = new Date(selectedDate);
       const [hours, minutes] = selectedTime.split(':');
       startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
@@ -229,7 +212,7 @@ export const BookingPage = () => {
       navigate('/dashboard');
     } catch (err) {
       console.error('Booking error:', err);
-      alert('Failed to create booking. Please try again.');
+      alert(t('booking_error_alert'));
     } finally {
       setIsBooking(false);
     }
@@ -325,10 +308,10 @@ export const BookingPage = () => {
                         className="bg-transparent border-none focus:outline-none cursor-pointer text-text-secondary"
                       >
                         <option value="UTC">UTC</option>
-                        <option value="America/New_York">Eastern Time</option>
+                        {/* <option value="America/New_York">Eastern Time</option>
                         <option value="America/Los_Angeles">Pacific Time</option>
                         <option value="Europe/London">London</option>
-                        <option value="Asia/Tokyo">Tokyo</option>
+                        <option value="Asia/Tokyo">Tokyo</option> */}
                       </select>
                     </div>
                   </div>
@@ -399,29 +382,36 @@ export const BookingPage = () => {
                       Available Times for {format(selectedDate, 'EEEE, MMMM d')}
                     </h4>
                     <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                      {TIME_SLOTS.map((time) => {
-                        const available = getAvailableSlots(selectedDate, time);
-                        const isSelected = selectedTime === time;
+                      {loadingSlots ? (
+                        Array(TIME_SLOTS.length).fill(0).map((_, i) => (
+                          <div key={i} className="bg-secondary h-10 rounded-md animate-pulse"></div>
+                        ))
+                      ) : (
+                        TIME_SLOTS.map((time) => {
+                          const isInList = availableSlots.some(
+                            slot => slot.slot_time.slice(0, 5) === time
+                          );
 
-                        return (
-                          <button
-                            key={time}
-                            onClick={() => available && handleTimeSelect(time)}
-                            disabled={!available}
-                            className={`
-                              py-2.5 px-3 rounded-md text-sm font-medium transition-all
-                              ${isSelected
+                          const isSelected = selectedTime === time;
+
+                          return (
+                            <button
+                              key={time}
+                              onClick={() => isInList && handleTimeSelect(time)}
+                              disabled={!isInList || !selectedDate}
+                              className={`py-2.5 px-3 rounded-md text-sm font-medium transition-all ${isSelected
                                 ? 'bg-accent text-white'
-                                : available
-                                  ? 'bg-secondary text-(--color-text-primary) hover:bg-accent/10 hover:text-accent'
-                                  : 'bg-secondary/50 text-text-muted/50 line-through cursor-not-allowed'
-                              }
-                            `}
-                          >
-                            {time}
-                          </button>
-                        );
-                      })}
+                                : isInList
+                                  ? 'bg-secondary text-(--color-text-primary) hover:bg-accent/10 hover:text-accent cursor-pointer'
+                                  : 'text-gray-400 line-through cursor-not-allowed bg-secondary/30'
+                                }
+          `}
+                            >
+                              {time}
+                            </button>
+                          );
+                        })
+                      )}
                     </div>
                   </CardContent>
                 </Card>

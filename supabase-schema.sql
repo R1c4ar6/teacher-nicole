@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS availability (
   start_time TIME NOT NULL,
   end_time TIME,
   timezone TEXT DEFAULT 'UTC',
-  is_recurring BOOLEAN DEFAULT true,
+  is_recurring BOOLEAN DEFAULT false,
   specific_date DATE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -155,9 +155,6 @@ CREATE POLICY "Admins can manage blocked dates" ON blocked_dates
 CREATE POLICY "Students can read own bookings" ON bookings
   FOR SELECT USING (auth.uid() = student_id);
 
-CREATE POLICY "Tutors can read bookings" ON bookings
-  FOR SELECT USING (auth.uid() = tutor_id);
-
 CREATE POLICY "Admins can read all bookings" ON bookings
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
@@ -169,7 +166,7 @@ CREATE POLICY "Authenticated users can create bookings" ON bookings
 CREATE POLICY "Students can update own bookings" ON bookings
   FOR UPDATE USING (
     auth.uid() = student_id OR
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'student')
   );
 
 -- Testimonials: Everyone can read approved, students can create

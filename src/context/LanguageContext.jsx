@@ -196,6 +196,7 @@ const translations = {
     booking_bank: 'Bank Transfer',
     booking_manual: 'Manual',
     booking_confirmPay: 'Confirm & Pay',
+    booking_error_alert: 'Failed to create booking, possible double booking',
 
     // Status
     status_pending: 'Pending',
@@ -399,6 +400,7 @@ const translations = {
     booking_bank: 'Transferencia Bancaria',
     booking_manual: 'Manual',
     booking_confirmPay: 'Confirmar y Pagar',
+    booking_error_alert: 'Fallo en creación de reserva, fechas duplicadas',
 
     // Status
     status_pending: 'Pendiente',
