@@ -19,7 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Ca
 import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../lib/auth';
-import { getBookings, getPackages, getApprovedTestimonials, updateBooking, supabase } from '../../lib/supabase';
+import { getBookings, getPackages, getApprovedTestimonials, updateBooking, supabase, getTutorId } from '../../lib/supabase';
 import { format, addDays, startOfWeek, addWeeks, isSameDay, parseISO } from 'date-fns';
 
 const navItems = [
@@ -390,6 +390,18 @@ export const AdminAvailabilityPage = () => {
   const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
   const [availability, setAvailability] = useState({});
   const [loading, setLoading] = useState(true);
+  const [tutorId, setTutorId] = useState(null);
+  const [specificDate, setSpecificDate] = useState(null);
+  const [scheduleType, setScheduleType] = useState('recurring');
+
+
+  useEffect(() => {
+    const init = async () => {
+      const id = await getTutorId();
+      setTutorId(id);
+    };
+    init();
+  }, []);
 
   useEffect(() => {
     const fetchAvailability = async () => {
@@ -426,8 +438,9 @@ export const AdminAvailabilityPage = () => {
       const { error } = await supabase.from('availability').insert({
         day_of_week: dayOfWeek,
         start_time: time,
-        tutor_id: null,
+        tutor_id: tutorId,
         timezone: 'UTC',
+        specific_date: specificDate,
       });
       if (!error) {
         setAvailability((prev) => ({ ...prev, [key]: true }));

@@ -80,7 +80,7 @@ export const BookingPage = () => {
 
 
   useEffect(() => {
-    if (!selectedDate || !user || !tutorId) return;
+    if (!selectedDate || !user) return;
 
     const loadAvailableSlots = async () => {
       setLoadingSlots(true);
@@ -92,7 +92,6 @@ export const BookingPage = () => {
         const { data, error } = await getAvailableSlots(
           dateString,
           dateString,
-          tutorId
         );
 
         if (error) throw error;
@@ -107,7 +106,7 @@ export const BookingPage = () => {
     };
 
     loadAvailableSlots();
-  }, [selectedDate, tutorId]);
+  }, [selectedDate]);
 
 
 

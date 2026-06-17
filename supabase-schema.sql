@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS availability (
   start_time TIME NOT NULL,
   end_time TIME,
   timezone TEXT DEFAULT 'UTC',
-  is_recurring BOOLEAN DEFAULT false,
+  is_recurring BOOLEAN DEFAULT true,
   specific_date DATE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

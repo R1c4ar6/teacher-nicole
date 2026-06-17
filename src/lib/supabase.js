@@ -166,9 +166,9 @@ export const submitTestimonial = async (testimonial) => {
   }
 };
 
-export const getAvailableSlots = async (startDate, endDate, tutorId) => {
+export const getAvailableSlots = async (startDate, endDate) => {
   try {
-    const { data, error } = await supabase.rpc('get_available_slots', { f_start_date: startDate, f_end_date: endDate, f_tutor_id: tutorId});
+    const { data, error } = await supabase.rpc('get_available_slots', { f_start_date: startDate, f_end_date: endDate});
     return { data: data || [], error };
   } catch (err) {
     console.error('getAvailableSlots error:', err);
