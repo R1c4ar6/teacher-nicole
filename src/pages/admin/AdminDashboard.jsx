@@ -52,8 +52,8 @@ export const AdminDashboardPage = () => {
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
         <Card className="max-w-md text-center">
           <CardContent>
-            <h2 className="text-xl font-display text-[var(--color-text-primary)] mb-2">Access Denied</h2>
-            <p className="text-[var(--color-text-secondary)] mb-4">
+            <h2 className="text-xl font-display text-(--color-text-primary) mb-2">Access Denied</h2>
+            <p className="text-text-secondary mb-4">
               You don't have permission to access the admin dashboard.
             </p>
             <Link to="/dashboard">
@@ -71,15 +71,15 @@ export const AdminDashboardPage = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-[var(--color-background)]">
+    <div className="min-h-[calc(100vh-80px)] bg-background">
       <div className="flex">
-        <aside className="hidden lg:block w-64 min-h-[calc(100vh-80px)] bg-[var(--color-surface)] border-r border-[var(--color-border)] p-4 fixed">
+        <aside className="hidden lg:block w-64 min-h-[calc(100vh-80px)] bg-surface border-r border-border p-4 fixed">
           <div className="mb-6">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[var(--color-accent)] rounded-[var(--radius-md)] flex items-center justify-center">
+              <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <span className="font-display text-lg text-[var(--color-text-primary)]">Admin</span>
+              <span className="font-display text-lg text-(--color-text-primary)">Admin</span>
             </Link>
           </div>
           <nav className="space-y-1">
@@ -88,10 +88,10 @@ export const AdminDashboardPage = () => {
                 key={item.path}
                 to={item.path}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)] text-sm font-medium transition-colors
+                  flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors
                   ${isActive(item.path)
-                    ? 'bg-[var(--color-accent-soft)] text-[var(--color-accent)]'
-                    : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-secondary)] hover:text-[var(--color-text-primary)]'
+                    ? 'bg-accent-soft text-accent'
+                    : 'text-text-secondary hover:bg-secondary hover:text-(--color-text-primary)'
                   }
                 `}
               >
@@ -417,16 +417,18 @@ export const AdminAvailabilityPage = () => {
     fetchAvailability();
   }, []);
 
-  const toggleSlot = async (dayOfWeek, time) => {
-    const key = `${dayOfWeek}-${time}`;
+  const toggleSlot = async (dayOfWeek, time, selectedDate) => {
+    const key = `${format(selectedDate, 'yyyy-MM-dd')}-${time}`;
     const isAvailable = availability[key];
+    const specificDate = format(selectedDate, 'yyyy-MM-dd');
 
     if (isAvailable) {
       const { error } = await supabase
         .from('availability')
         .delete()
         .eq('day_of_week', dayOfWeek)
-        .eq('start_time', time);
+        .eq('start_time', time)
+        .eq('specific_date', specificDate);
       if (!error) {
         setAvailability((prev) => {
           const next = { ...prev };
@@ -435,10 +437,12 @@ export const AdminAvailabilityPage = () => {
         });
       }
     } else {
-      const { error } = await supabase.from('availability').insert({
+      const { error } = await supabase
+      .from('availability')
+      .insert({
         day_of_week: dayOfWeek,
-        start_time: time,
         tutor_id: tutorId,
+        start_time: time,
         timezone: 'UTC',
         specific_date: specificDate,
       });
@@ -496,7 +500,7 @@ export const AdminAvailabilityPage = () => {
                     return (
                       <button
                         key={time}
-                        onClick={() => toggleSlot(dayIndex, time)}
+                        onClick={() => toggleSlot(dayIndex, time, date)}
                         className={`
                           w-full py-2 text-xs rounded-lg transition-all
                           ${isAvailable
