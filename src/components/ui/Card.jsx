@@ -64,7 +64,7 @@ export const CardHeader = ({ children, className = '' }) => (
 );
 
 export const CardTitle = ({ children, className = '' }) => (
-  <h3 className={`text-lg font-semibold text-[var(--color-text-primary)] ${className}`}>
+  <h3 className={`text-lg font-semibold text-(--color-text-primary) ${className}`}>
     {children}
   </h3>
 );
@@ -74,7 +74,7 @@ export const CardContent = ({ children, className = '' }) => (
 );
 
 export const CardFooter = ({ children, className = '' }) => (
-  <div className={`mt-4 pt-4 border-t border-[var(--color-border)] ${className}`}>
+  <div className={`mt-4 pt-4 border-t border-border ${className}`}>
     {children}
   </div>
 );

@@ -21,6 +21,7 @@ import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../lib/auth';
 import { getBookings, getPackages, getApprovedTestimonials, updateBooking, supabase, getTutorId } from '../../lib/supabase';
 import { format, addDays, startOfWeek, addWeeks, isSameDay, parseISO } from 'date-fns';
+import { formatPrice } from '../public/PricingPage';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Overview', path: '/admin' },
@@ -391,8 +392,10 @@ export const AdminAvailabilityPage = () => {
   const [availability, setAvailability] = useState({});
   const [loading, setLoading] = useState(true);
   const [tutorId, setTutorId] = useState(null);
-  const [specificDate, setSpecificDate] = useState(null);
-  const [scheduleType, setScheduleType] = useState('recurring');
+
+
+  const getAvailabilityKey = (date, time) =>
+    `${format(date, "yyyy-MM-dd")}-${time.slice(0, 5)}`;
 
 
   useEffect(() => {
@@ -407,10 +410,13 @@ export const AdminAvailabilityPage = () => {
     const fetchAvailability = async () => {
       const { data } = await supabase.from('availability').select('*');
       const availMap = {};
+
       data?.forEach((a) => {
-        const key = `${a.day_of_week}-${a.start_time}`;
+        const key = `${a.specific_date}-${a.start_time.slice(0, 5)}`;
         availMap[key] = true;
+
       });
+
       setAvailability(availMap);
       setLoading(false);
     };
@@ -418,7 +424,7 @@ export const AdminAvailabilityPage = () => {
   }, []);
 
   const toggleSlot = async (dayOfWeek, time, selectedDate) => {
-    const key = `${format(selectedDate, 'yyyy-MM-dd')}-${time}`;
+    const key = getAvailabilityKey(selectedDate, time);
     const isAvailable = availability[key];
     const specificDate = format(selectedDate, 'yyyy-MM-dd');
 
@@ -438,14 +444,14 @@ export const AdminAvailabilityPage = () => {
       }
     } else {
       const { error } = await supabase
-      .from('availability')
-      .insert({
-        day_of_week: dayOfWeek,
-        tutor_id: tutorId,
-        start_time: time,
-        timezone: 'UTC',
-        specific_date: specificDate,
-      });
+        .from('availability')
+        .insert({
+          day_of_week: dayOfWeek,
+          tutor_id: tutorId,
+          start_time: time,
+          timezone: 'UTC',
+          specific_date: specificDate,
+        });
       if (!error) {
         setAvailability((prev) => ({ ...prev, [key]: true }));
       }
@@ -495,7 +501,7 @@ export const AdminAvailabilityPage = () => {
                 <p className="text-xs text-text-muted mb-4">{format(date, 'MMM d')}</p>
                 <div className="space-y-2">
                   {TIME_SLOTS.map((time) => {
-                    const key = `${dayIndex}-${time}`;
+                    const key = getAvailabilityKey(date, time);
                     const isAvailable = availability[key];
                     return (
                       <button
@@ -614,7 +620,7 @@ export const AdminPackagesPage = () => {
               </div>
               <p className="text-sm text-text-muted mb-2">{pkg.description}</p>
               <p className="text-lg font-serif text-accent mb-4">
-                ${(pkg.price_cents / 100).toFixed(2)} / {pkg.duration_minutes}min
+                {formatPrice(pkg.price_cents, pkg.currency)} / {pkg.duration_minutes}min
               </p>
               <div className="flex gap-2">
                 <Button variant="ghost" size="sm" onClick={() => openEditModal(pkg)}>

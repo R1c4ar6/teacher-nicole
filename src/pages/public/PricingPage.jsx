@@ -8,7 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { getPackages } from '../../lib/supabase';
 
 export const formatPrice = (cents, currency = t('pricing_currency')) => {
-  return new Intl.NumberFormat('en-GB', {
+  return new Intl.NumberFormat('de-DE', {
     style: 'currency',
     currency,
   }).format(cents);
