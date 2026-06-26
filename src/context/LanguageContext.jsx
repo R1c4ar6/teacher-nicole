@@ -333,7 +333,7 @@ const translations = {
     footer_quickLinks: 'Enlaces Rápidos',
     footer_contact: 'Contacto',
     footer_email: 'hello@teachernicole.com',
-    footer_phone: '+1 (555) 123-4567',
+    footer_phone: '+34 614 23 21 70',
     footer_location: 'Clases en Línea en Todo el Mundo',
     footer_copyright: 'Todos los derechos reservados.',
     footer_privacy: 'Política de Privacidad',
